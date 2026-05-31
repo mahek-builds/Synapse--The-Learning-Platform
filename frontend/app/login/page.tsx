@@ -1,34 +1,50 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+<GoogleLogin
+  onSuccess={(credentialResponse) => {
+    console.log("Google Login Success", credentialResponse);
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+    localStorage.setItem(
+      "google_token",
+      credentialResponse.credential || ""
+    );
 
-  const handleLogin = async () => {
-    const res = await fetch("http://localhost:8000/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    navigate("/dashboard");
+  }}
+  onError={() => {
+    console.log("Google Login Failed");
+  }}
+/>
+return (
+  <div>
+    <h2>Login</h2>
 
-    const data = await res.json();
+    <input
+      placeholder="Email"
+      onChange={(e) => setEmail(e.target.value)}
+    />
 
-    if (data.access_token) {
-      localStorage.setItem("token", data.access_token);
-      navigate("/dashboard");
-    } else {
-      alert("Login failed");
-    }
-  };
+    <input
+      type="password"
+      placeholder="Password"
+      onChange={(e) => setPassword(e.target.value)}
+    />
 
-  return (
-    <div>
-      <h2>Login</h2>
-      <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-      <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-      <button onClick={handleLogin}>Login</button>
-    </div>
-  );
-}
+    <button onClick={handleLogin}>Login</button>
+
+    <hr />
+
+    <GoogleLogin
+      onSuccess={(credentialResponse) => {
+        localStorage.setItem(
+          "google_token",
+          credentialResponse.credential || ""
+        );
+
+        navigate("/dashboard");
+      }}
+      onError={() => {
+        console.log("Google Login Failed");
+      }}
+    />
+  </div>
+);
