@@ -53,3 +53,5 @@ Port 3000 is in use, trying another one...
 [2m9:31:55 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mvite-dev-3003.err.log[22m
 [2m9:31:57 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ new dependencies optimized: [33m@react-oauth/google[32m[39m
 [2m9:31:57 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ optimized dependencies changed. reloading[39m
+[2m10:03:32 pm[22m [36m[1m[vite][22m[39m changed tsconfig file detected: C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/tsconfig.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.
+[2m10:03:42 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/FullPageQuiz.tsx, /src/styles/index.css[22m

@@ -22,6 +22,13 @@ type ChartContextProps = {
   config: ChartConfig;
 };
 
+type ChartLegendPayloadItem = {
+  value?: string | number;
+  dataKey?: string | number;
+  color?: string;
+  payload?: unknown;
+};
+
 const ChartContext = React.createContext<ChartContextProps | null>(null);
 
 function useChart() {
@@ -257,7 +264,9 @@ function ChartLegendContent({
   verticalAlign = "bottom",
   nameKey,
 }: React.ComponentProps<"div"> &
-  Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+  {
+    payload?: ChartLegendPayloadItem[];
+    verticalAlign?: "top" | "middle" | "bottom";
     hideIcon?: boolean;
     nameKey?: string;
   }) {

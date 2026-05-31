@@ -86,7 +86,7 @@ export function FullPageQuiz({ onClose }: { onClose: () => void }) {
   };
 
   if (showResults) {
-    const score = answers.reduce((acc, answer, idx) => {
+    const score = answers.reduce<number>((acc, answer, idx) => {
       return answer === questions[idx].correctAnswer ? acc + 1 : acc;
     }, 0);
     const percentage = Math.round((score / questions.length) * 100);
