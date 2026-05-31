@@ -1,0 +1,62 @@
+import { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
+import { ClaudeSidebar } from './components/ClaudeSidebar';
+import { ClaudeChat } from './components/ClaudeChat';
+import { ProfileModal } from './components/ProfileModal';
+import { FullPageQuiz } from './components/FullPageQuiz';
+import { FullPageExplanation } from './components/FullPageExplanation';
+import { FullPageDiagram } from './components/FullPageDiagram';
+import { LoginPage } from './components/LoginPage';
+import { RegisterPage } from './components/RegisterPage';
+
+export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [currentView, setCurrentView] = useState<'chat' | 'quiz' | 'explanation' | 'diagram'>('chat');
+
+  const handleCardClick = (type: string) => {
+    if (type === 'quiz') setCurrentView('quiz');
+    else if (type === 'explanation') setCurrentView('explanation');
+    else if (type === 'diagram') setCurrentView('diagram');
+  };
+
+  const handleNewChat = () => {
+    setCurrentView('chat');
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage onLogin={() => setIsAuthenticated(true)} />} />
+          <Route path="/register" element={<RegisterPage onRegister={() => setIsAuthenticated(true)} />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
+
+  // Full-page views (no sidebar)
+  if (currentView === 'quiz') {
+    return <FullPageQuiz onClose={() => setCurrentView('chat')} />;
+  }
+
+  if (currentView === 'explanation') {
+    return <FullPageExplanation onClose={() => setCurrentView('chat')} />;
+  }
+
+  if (currentView === 'diagram') {
+    return <FullPageDiagram onClose={() => setCurrentView('chat')} />;
+  }
+
+  // Main chat view
+  return (
+    <div className="flex h-screen bg-[#FAFAF8]">
+      <ClaudeSidebar onNewChat={handleNewChat} onProfileClick={() => setShowProfile(true)} />
+      <div className="flex-1">
+        <ClaudeChat onCardClick={handleCardClick} />
+      </div>
+      {showProfile && <ProfileModal onClose={() => setShowProfile(false)} />}
+    </div>
+  );
+}
