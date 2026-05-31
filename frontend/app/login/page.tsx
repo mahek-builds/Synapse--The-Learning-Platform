@@ -1,50 +1,44 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
-<GoogleLogin
-  onSuccess={(credentialResponse) => {
-    console.log("Google Login Success", credentialResponse);
 
-    localStorage.setItem(
-      "google_token",
-      credentialResponse.credential || ""
-    );
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-    navigate("/dashboard");
-  }}
-  onError={() => {
-    console.log("Google Login Failed");
-  }}
-/>
-return (
-  <div>
-    <h2>Login</h2>
+  const handleLogin = async () => {
+    // login code
+  };
 
-    <input
-      placeholder="Email"
-      onChange={(e) => setEmail(e.target.value)}
-    />
+  return (
+    <div>
+      <h2>Login</h2>
 
-    <input
-      type="password"
-      placeholder="Password"
-      onChange={(e) => setPassword(e.target.value)}
-    />
+      <input
+        placeholder="Email"
+        onChange={(e) => setEmail(e.target.value)}
+      />
 
-    <button onClick={handleLogin}>Login</button>
+      <input
+        type="password"
+        placeholder="Password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
 
-    <hr />
+      <button onClick={handleLogin}>Login</button>
 
-    <GoogleLogin
-      onSuccess={(credentialResponse) => {
-        localStorage.setItem(
-          "google_token",
-          credentialResponse.credential || ""
-        );
+      <hr />
 
-        navigate("/dashboard");
-      }}
-      onError={() => {
-        console.log("Google Login Failed");
-      }}
-    />
-  </div>
-);
+      <GoogleLogin
+        onSuccess={(credentialResponse) => {
+          console.log("Success", credentialResponse);
+          navigate("/dashboard");
+        }}
+        onError={() => {
+          console.log("Failed");
+        }}
+      />
+    </div>
+  );
+}
