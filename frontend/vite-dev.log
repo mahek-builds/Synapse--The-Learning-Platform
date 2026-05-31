@@ -8,3 +8,10 @@ Port 3000 is in use, trying another one...
 
   [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m3001[22m/[39m
   [32m➜[39m  [1mNetwork[22m: [36mhttp://172.24.167.227:[1m3001[22m/[39m
+[2m8:05:26 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [optimizer] bundling dependencies...
+[2m8:05:26 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ new dependencies optimized: [33mlucide-react, react-dom/client, react-router[32m[39m
+[2m8:05:26 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ optimized dependencies changed. reloading[39m
+[2m8:15:05 pm[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
+[2m8:15:06 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m Re-optimizing dependencies because lockfile has changed
+[2m8:15:06 pm[22m [36m[1m[vite][22m[39m server restarted.
+[2m8:15:07 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [optimizer] bundling dependencies...

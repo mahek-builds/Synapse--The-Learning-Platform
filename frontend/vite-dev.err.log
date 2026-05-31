@@ -1,3 +1,370 @@
 [2m7:55:32 pm[22m [33m[1m[vite][22m[39m [33mwarning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.[39m
 `optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.
 [vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown
+[2m7:56:42 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /src/main.tsx (resolved id: /src/main.tsx). Does the file exist?
+[2m7:56:42 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /src/main.tsx (resolved id: /src/main.tsx). Does the file exist?
+[2m7:56:52 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /src/main.tsx (resolved id: /src/main.tsx). Does the file exist?
+[2m8:01:39 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /src/main.tsx (resolved id: /src/main.tsx). Does the file exist?
+[2m8:01:41 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /src/main.tsx (resolved id: /src/main.tsx). Does the file exist?
+[2m8:01:44 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /src/main.tsx (resolved id: /src/main.tsx). Does the file exist?
+[33mWarning: Invalid input options (1 issue found)
+- For the "jsx". Invalid key: Expected never but received "jsx". [0m
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:05:24 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+[33mWarning: Invalid input options (1 issue found)
+- For the "jsx". Invalid key: Expected never but received "jsx". [0m
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:05:27 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:05:27 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'[39m
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+      at async open (node:internal/fs/promises:640:25)
+      at async Object.readFile (node:internal/fs/promises:1283:14)
+      at async Object.load (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21001:17)
+      at async loadImportContent (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:392:19)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Object.Once (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:455:20)
+      at async LazyResult.runAsync (C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\node_modules\postcss\lib\lazy-result.js:293:11)
+      at async runPostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21055:19)
+      at async compilePostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21039:6)
+      at async compileCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20969:26)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20477:47)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:05:28 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'[39m
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+      at async open (node:internal/fs/promises:640:25)
+      at async Object.readFile (node:internal/fs/promises:1283:14)
+      at async Object.load (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21001:17)
+      at async loadImportContent (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:392:19)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Object.Once (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:455:20)
+      at async LazyResult.runAsync (C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\node_modules\postcss\lib\lazy-result.js:293:11)
+      at async runPostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21055:19)
+      at async compilePostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21039:6)
+      at async compileCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20969:26)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20477:47)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:06:25 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'[39m
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+      at async open (node:internal/fs/promises:640:25)
+      at async Object.readFile (node:internal/fs/promises:1283:14)
+      at async Object.load (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21001:17)
+      at async loadImportContent (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:392:19)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Object.Once (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:455:20)
+      at async LazyResult.runAsync (C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\node_modules\postcss\lib\lazy-result.js:293:11)
+      at async runPostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21055:19)
+      at async compilePostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21039:6)
+      at async compileCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20969:26)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20477:47)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:06:28 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'[39m
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+      at async open (node:internal/fs/promises:640:25)
+      at async Object.readFile (node:internal/fs/promises:1283:14)
+      at async Object.load (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21001:17)
+      at async loadImportContent (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:392:19)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Object.Once (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:455:20)
+      at async LazyResult.runAsync (C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\node_modules\postcss\lib\lazy-result.js:293:11)
+      at async runPostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21055:19)
+      at async compilePostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21039:6)
+      at async compileCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20969:26)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20477:47)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:06:30 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'[39m
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+      at async open (node:internal/fs/promises:640:25)
+      at async Object.readFile (node:internal/fs/promises:1283:14)
+      at async Object.load (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21001:17)
+      at async loadImportContent (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:392:19)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Object.Once (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:455:20)
+      at async LazyResult.runAsync (C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\node_modules\postcss\lib\lazy-result.js:293:11)
+      at async runPostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21055:19)
+      at async compilePostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21039:6)
+      at async compileCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20969:26)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20477:47)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:06:39 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'[39m
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+      at async open (node:internal/fs/promises:640:25)
+      at async Object.readFile (node:internal/fs/promises:1283:14)
+      at async Object.load (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21001:17)
+      at async loadImportContent (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:392:19)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Object.Once (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:455:20)
+      at async LazyResult.runAsync (C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\node_modules\postcss\lib\lazy-result.js:293:11)
+      at async runPostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21055:19)
+      at async compilePostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21039:6)
+      at async compileCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20969:26)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20477:47)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:06:55 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'[39m
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+      at async open (node:internal/fs/promises:640:25)
+      at async Object.readFile (node:internal/fs/promises:1283:14)
+      at async Object.load (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21001:17)
+      at async loadImportContent (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:392:19)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Object.Once (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:455:20)
+      at async LazyResult.runAsync (C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\node_modules\postcss\lib\lazy-result.js:293:11)
+      at async runPostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21055:19)
+      at async compilePostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21039:6)
+      at async compileCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20969:26)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20477:47)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:12:47 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'[39m
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+      at async open (node:internal/fs/promises:640:25)
+      at async Object.readFile (node:internal/fs/promises:1283:14)
+      at async Object.load (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21001:17)
+      at async loadImportContent (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:392:19)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Object.Once (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:455:20)
+      at async LazyResult.runAsync (C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\node_modules\postcss\lib\lazy-result.js:293:11)
+      at async runPostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21055:19)
+      at async compilePostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21039:6)
+      at async compileCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20969:26)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20477:47)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:12:50 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'[39m
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+      at async open (node:internal/fs/promises:640:25)
+      at async Object.readFile (node:internal/fs/promises:1283:14)
+      at async Object.load (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21001:17)
+      at async loadImportContent (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:392:19)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Object.Once (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:455:20)
+      at async LazyResult.runAsync (C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\node_modules\postcss\lib\lazy-result.js:293:11)
+      at async runPostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21055:19)
+      at async compilePostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21039:6)
+      at async compileCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20969:26)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20477:47)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:12:51 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'[39m
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+      at async open (node:internal/fs/promises:640:25)
+      at async Object.readFile (node:internal/fs/promises:1283:14)
+      at async Object.load (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21001:17)
+      at async loadImportContent (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:392:19)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Object.Once (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:455:20)
+      at async LazyResult.runAsync (C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\node_modules\postcss\lib\lazy-result.js:293:11)
+      at async runPostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21055:19)
+      at async compilePostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21039:6)
+      at async compileCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20969:26)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20477:47)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:12:51 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'[39m
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+      at async open (node:internal/fs/promises:640:25)
+      at async Object.readFile (node:internal/fs/promises:1283:14)
+      at async Object.load (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21001:17)
+      at async loadImportContent (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:392:19)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Object.Once (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:455:20)
+      at async LazyResult.runAsync (C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\node_modules\postcss\lib\lazy-result.js:293:11)
+      at async runPostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21055:19)
+      at async compilePostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21039:6)
+      at async compileCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20969:26)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20477:47)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:12:52 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'[39m
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+      at async open (node:internal/fs/promises:640:25)
+      at async Object.readFile (node:internal/fs/promises:1283:14)
+      at async Object.load (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21001:17)
+      at async loadImportContent (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:392:19)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Object.Once (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:455:20)
+      at async LazyResult.runAsync (C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\node_modules\postcss\lib\lazy-result.js:293:11)
+      at async runPostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21055:19)
+      at async compilePostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21039:6)
+      at async compileCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20969:26)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20477:47)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[31mUnable to resolve `@import "tailwindcss"` from C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\src\styles[39m
+[2m8:13:12 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] ENOENT: no such file or directory, open 'C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\tailwindcss'[39m
+  Plugin: [35mvite:css[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m:undefined:NaN
+      at async open (node:internal/fs/promises:640:25)
+      at async Object.readFile (node:internal/fs/promises:1283:14)
+      at async Object.load (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21001:17)
+      at async loadImportContent (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:392:19)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Promise.all (index 0)
+      at async resolveImportId (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:378:20)
+      at async parseStyles (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:331:4)
+      at async Object.Once (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/postcss-import.js:455:20)
+      at async LazyResult.runAsync (C:\Users\bhati\Desktop\Synapse--The-Learning-Platform\frontend\node_modules\postcss\lib\lazy-result.js:293:11)
+      at async runPostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21055:19)
+      at async compilePostCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:21039:6)
+      at async compileCSS (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20969:26)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:20477:47)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[2m8:15:06 pm[22m [33m[1m[vite][22m[39m [33mwarning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.[39m
+`optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.
+[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown
+[33mWarning: Invalid input options (1 issue found)
+- For the "jsx". Invalid key: Expected never but received "jsx". [0m
+[33mWarning: Invalid input options (1 issue found)
+- For the "jsx". Invalid key: Expected never but received "jsx". [0m
+[2m8:15:07 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: The path given to `source(…)` must be a directory but got `source(C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/**/*.{js,ts,jsx,tsx})` instead.
+  Plugin: [35m@tailwindcss/vite:generate:serve[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m
+[2m8:15:07 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: The path given to `source(…)` must be a directory but got `source(C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/**/*.{js,ts,jsx,tsx})` instead.[39m
+  Plugin: [35m@tailwindcss/vite:generate:serve[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m
+      at _.generate (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/@tailwindcss/vite/dist/index.mjs:1:6895)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/@tailwindcss/vite/dist/index.mjs:1:3103)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[2m8:15:08 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: The path given to `source(…)` must be a directory but got `source(C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/**/*.{js,ts,jsx,tsx})` instead.[39m
+  Plugin: [35m@tailwindcss/vite:generate:serve[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m
+      at _.generate (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/@tailwindcss/vite/dist/index.mjs:1:6895)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/@tailwindcss/vite/dist/index.mjs:1:3103)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[2m8:15:08 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: The path given to `source(…)` must be a directory but got `source(C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/**/*.{js,ts,jsx,tsx})` instead.[39m
+  Plugin: [35m@tailwindcss/vite:generate:serve[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m
+      at _.generate (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/@tailwindcss/vite/dist/index.mjs:1:6895)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/@tailwindcss/vite/dist/index.mjs:1:3103)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[2m8:15:08 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: The path given to `source(…)` must be a directory but got `source(C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/**/*.{js,ts,jsx,tsx})` instead.[39m
+  Plugin: [35m@tailwindcss/vite:generate:serve[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m
+      at _.generate (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/@tailwindcss/vite/dist/index.mjs:1:6895)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/@tailwindcss/vite/dist/index.mjs:1:3103)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
+[2m8:15:14 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: The path given to `source(…)` must be a directory but got `source(C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/**/*.{js,ts,jsx,tsx})` instead.[39m
+  Plugin: [35m@tailwindcss/vite:generate:serve[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m
+      at _.generate (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/@tailwindcss/vite/dist/index.mjs:1:6895)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/@tailwindcss/vite/dist/index.mjs:1:3103)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)

@@ -1,0 +1,21 @@
+[2m8:15:56 pm[22m [33m[1m[vite][22m[39m [33mwarning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.[39m
+`optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.
+[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown
+[2m8:16:15 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: The path given to `source(…)` must be a directory but got `source(C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/**/*.{js,ts,jsx,tsx})` instead.
+  Plugin: [35m@tailwindcss/vite:generate:serve[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m
+[2m8:16:16 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: The path given to `source(…)` must be a directory but got `source(C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/**/*.{js,ts,jsx,tsx})` instead.[39m
+  Plugin: [35m@tailwindcss/vite:generate:serve[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m
+      at _.generate (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/@tailwindcss/vite/dist/index.mjs:1:6895)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/@tailwindcss/vite/dist/index.mjs:1:3103)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+[2m8:16:27 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: The path given to `source(…)` must be a directory but got `source(C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/**/*.{js,ts,jsx,tsx})` instead.[39m
+  Plugin: [35m@tailwindcss/vite:generate:serve[39m
+  File: [36mC:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/src/styles/index.css[39m
+      at _.generate (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/@tailwindcss/vite/dist/index.mjs:1:6895)
+      at async TransformPluginContext.handler (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/@tailwindcss/vite/dist/index.mjs:1:3103)
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:30273:14)
+      at async loadAndTransform (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24532:26)
+      at async viteTransformMiddleware (file:///C:/Users/bhati/Desktop/Synapse--The-Learning-Platform/frontend/node_modules/vite/dist/node/chunks/node.js:24326:20)
