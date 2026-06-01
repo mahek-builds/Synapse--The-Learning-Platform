@@ -9,3 +9,10 @@
   [32m➜[39m  [1mNetwork[22m: [36mhttp://172.24.167.227:[1m3000[22m/[39m
 [2m11:40:25 pm[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
 [2m11:40:25 pm[22m [36m[1m[vite][22m[39m server restarted.
+[2m1:15:45 am[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
+[2m1:15:45 am[22m [36m[1m[vite][22m[39m server restarted.
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m3000[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://10.210.207.227:[1m3000[22m/[39m
+[2m1:15:47 am[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
+[2m1:15:47 am[22m [36m[1m[vite][22m[39m server restarted.
