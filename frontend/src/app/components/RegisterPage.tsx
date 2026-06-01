@@ -1,19 +1,28 @@
 import { useState } from 'react';
 import { Brain, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 export function RegisterPage({ onRegister }: { onRegister: () => void }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (password !== confirmPassword) {
       alert('Passwords do not match!');
       return;
     }
+
+    if (!captchaToken) {
+      alert('Please complete the CAPTCHA');
+      return;
+    }
+
     onRegister();
   };
 
@@ -140,6 +149,14 @@ export function RegisterPage({ onRegister }: { onRegister: () => void }) {
                 </a>
               </span>
             </label>
+
+            <div className="flex justify-center">
+              <ReCAPTCHA
+                sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                onChange={(token) => setCaptchaToken(token)}
+                onExpired={() => setCaptchaToken(null)}
+              />
+            </div>
 
             <button
               type="submit"

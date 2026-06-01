@@ -2,13 +2,21 @@ import { useState } from 'react';
 import { Brain, Mail, Lock, ArrowRight } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import { Link } from 'react-router';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 export function LoginPage({ onLogin }: { onLogin: () => void }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!captchaToken) {
+      alert('Please complete the CAPTCHA');
+      return;
+    }
+
     onLogin();
   };
 
@@ -69,6 +77,14 @@ export function LoginPage({ onLogin }: { onLogin: () => void }) {
               </a>
             </div>
 
+            <div className="flex justify-center">
+              <ReCAPTCHA
+                sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                onChange={(token) => setCaptchaToken(token)}
+                onExpired={() => setCaptchaToken(null)}
+              />
+            </div>
+
             <button
               type="submit"
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-violet-600 to-pink-500 px-6 py-3 font-medium text-white shadow-lg transition-all hover:shadow-xl"
@@ -87,6 +103,11 @@ export function LoginPage({ onLogin }: { onLogin: () => void }) {
           <div className="flex justify-center">
             <GoogleLogin
               onSuccess={(credentialResponse) => {
+                if (!captchaToken) {
+                  alert('Please complete the CAPTCHA first');
+                  return;
+                }
+
                 console.log('Google login success', credentialResponse);
                 onLogin();
               }}
