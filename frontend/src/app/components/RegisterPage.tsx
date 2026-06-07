@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { Brain, Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { GoogleLogin } from '@react-oauth/google';
 import { Link } from 'react-router';
 import ReCAPTCHA from 'react-google-recaptcha';
+
+const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 export function RegisterPage({ onRegister }: { onRegister: () => void }) {
   const [name, setName] = useState('');
@@ -18,7 +21,7 @@ export function RegisterPage({ onRegister }: { onRegister: () => void }) {
       return;
     }
 
-    if (!captchaToken) {
+    if (recaptchaSiteKey && !captchaToken) {
       alert('Please complete the CAPTCHA');
       return;
     }
@@ -150,13 +153,19 @@ export function RegisterPage({ onRegister }: { onRegister: () => void }) {
               </span>
             </label>
 
-            <div className="flex justify-center">
-              <ReCAPTCHA
-                sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                onChange={(token) => setCaptchaToken(token)}
-                onExpired={() => setCaptchaToken(null)}
-              />
-            </div>
+            {recaptchaSiteKey ? (
+              <div className="flex justify-center">
+                <ReCAPTCHA
+                  sitekey={recaptchaSiteKey}
+                  onChange={(token) => setCaptchaToken(token)}
+                  onExpired={() => setCaptchaToken(null)}
+                />
+              </div>
+            ) : (
+              <p className="text-center text-sm text-red-600">
+                reCAPTCHA site key is missing.
+              </p>
+            )}
 
             <button
               type="submit"
@@ -166,6 +175,27 @@ export function RegisterPage({ onRegister }: { onRegister: () => void }) {
               <ArrowRight className="size-5" />
             </button>
           </form>
+
+          <div className="my-6 flex items-center gap-3">
+            <div className="h-px flex-1 bg-slate-200" />
+            <span className="text-xs font-medium uppercase tracking-wide text-slate-400">or</span>
+            <div className="h-px flex-1 bg-slate-200" />
+          </div>
+
+          <div className="flex justify-center">
+            <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                console.log('Google registration success', credentialResponse);
+                onRegister();
+              }}
+              onError={() => {
+                console.log('Google registration failed');
+              }}
+              text="signup_with"
+              shape="rectangular"
+              width="320"
+            />
+          </div>
 
           <p className="mt-6 text-center text-sm text-slate-600">
             Already have an account?{' '}
