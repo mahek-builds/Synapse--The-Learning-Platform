@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Brain, Mail, Lock, User, ArrowRight } from 'lucide-react';
-import { GoogleLogin } from '@react-oauth/google';
 import { Link } from 'react-router';
 import ReCAPTCHA from 'react-google-recaptcha';
 
@@ -175,27 +174,6 @@ export function RegisterPage({ onRegister }: { onRegister: () => void }) {
               <ArrowRight className="size-5" />
             </button>
           </form>
-
-          <div className="my-6 flex items-center gap-3">
-            <div className="h-px flex-1 bg-slate-200" />
-            <span className="text-xs font-medium uppercase tracking-wide text-slate-400">or</span>
-            <div className="h-px flex-1 bg-slate-200" />
-          </div>
-
-          <div className="flex justify-center">
-            <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                console.log('Google registration success', credentialResponse);
-                onRegister();
-              }}
-              onError={() => {
-                console.log('Google registration failed');
-              }}
-              text="signup_with"
-              shape="rectangular"
-              width="320"
-            />
-          </div>
 
           <p className="mt-6 text-center text-sm text-slate-600">
             Already have an account?{' '}
