@@ -1,6 +1,7 @@
-from pydantic import BaseModel
-from typing import Optional, List, Dict
 from datetime import datetime
+from typing import Dict, List, Optional
+
+from pydantic import BaseModel
 
 
 class ChatSessionCreate(BaseModel):
@@ -33,3 +34,24 @@ class ChatSessionWithMessages(BaseModel):
 class WebSocketMessage(BaseModel):
     type: str
     data: Dict
+
+
+# ----------------------------
+# AI Chat Request
+# ----------------------------
+
+class ChatRequest(BaseModel):
+    session_id: Optional[str] = None
+    user_id: str
+    message: str
+
+
+# ----------------------------
+# AI Chat Response
+# ----------------------------
+
+class ChatResponse(BaseModel):
+    session_id: str
+    response: str
+    topic: str
+    intent: str
