@@ -1,0 +1,16 @@
+class ChatService:
+
+    def create_session(self, data):
+        ...
+
+    def get_sessions(self):
+        ...
+
+    def get_session(self, session_id):
+        ...
+
+    def store_message(self):
+        ...
+
+    def delete_session(self, session_id):
+        ...

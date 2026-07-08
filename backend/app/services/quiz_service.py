@@ -1,0 +1,16 @@
+class QuizService:
+
+    def get_topics(self):
+        ...
+
+    def get_questions(self, topic, difficulty, limit):
+        ...
+
+    def create_quiz_session(self):
+        ...
+
+    def submit_answers(self, data):
+        ...
+
+    def get_history(self):
+        ...
