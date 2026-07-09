@@ -1,13 +1,29 @@
 from fastapi import APIRouter
-router=APIRouter()
-@router.get("/profile")
-def get_profile():
-    return {"message": "Get Profile"}
+from app.schemas.user import UserUpdate
+from app.services.user_service import user_service
 
-@router.put("/profile")
-def update_profile():
-    return {"message": "Update Profile"}
+router = APIRouter(
+    prefix="/users",
+    tags=["Users"]
+)
 
-@router.get("/stats")
-def get_stats():
-    return {"message": "User Stats"}
+
+@router.get("/{user_id}")
+def get_profile(user_id: str):
+
+    return user_service.get_profile(user_id)
+
+
+@router.put("/{user_id}")
+def update_profile(
+    user_id: str,
+    data: UserUpdate
+):
+
+    return user_service.update_profile(user_id, data)
+
+
+@router.get("/{user_id}/stats")
+def get_stats(user_id: str):
+
+    return user_service.get_stats(user_id)

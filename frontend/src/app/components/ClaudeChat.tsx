@@ -17,6 +17,21 @@ interface ResultCard {
   url: string;
 }
 
+const getStoredUserId = () => {
+  if (typeof window === 'undefined') return 'guest';
+  let stored = window.localStorage.getItem('synapse_user_id');
+  if (!stored) {
+    stored = `guest-${Math.random().toString(36).slice(2, 10)}`;
+    window.localStorage.setItem('synapse_user_id', stored);
+  }
+  return stored;
+};
+
+const getStoredSessionId = () => {
+  if (typeof window === 'undefined') return null;
+  return window.localStorage.getItem('synapse_session_id');
+};
+
 export function ClaudeChat({
   onCardClick
 }: {
@@ -25,9 +40,11 @@ export function ClaudeChat({
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(getStoredSessionId());
+  const [userId] = useState<string>(getStoredUserId);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
 
     const userMessage: Message = {
@@ -42,40 +59,56 @@ export function ClaudeChat({
     setInput('');
     setIsLoading(true);
 
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: userId,
+          session_id: sessionId,
+          message: currentInput,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Chat request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data.session_id) {
+        window.localStorage.setItem('synapse_session_id', data.session_id);
+        setSessionId(data.session_id);
+      }
+
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: `I'll help you learn about **${currentInput}**.\n\nThis is a comprehensive topic that involves understanding core concepts, practical implementation, and best practices. I've created three resources to help you master this:\n\n**Core Concepts:** The fundamental principles you need to understand\n\n**Visual Representation:** A diagram showing how everything connects\n\n**Knowledge Check:** An adaptive quiz to test your understanding\n\nClick on any card below to explore each aspect in detail.`,
-        cards: [
+        content: data.response || 'Sorry, I could not get a response from the server.',
+        cards: data.topic || data.intent ? [
           {
-            id: 'exp-1',
+            id: `topic-${Date.now()}`,
             type: 'explanation',
-            title: 'Explanation',
-            subtitle: `Comprehensive guide to ${currentInput}`,
-            url: `/explain/${Date.now()}`,
+            title: data.topic ? `Topic: ${data.topic}` : `Intent: ${data.intent}`,
+            subtitle: 'Response returned by backend AI',
+            url: '#',
           },
-          {
-            id: 'dia-1',
-            type: 'diagram',
-            title: 'Diagram',
-            subtitle: 'Visual workflow representation',
-            url: `/diagram/${Date.now()}`,
-          },
-          {
-            id: 'quiz-1',
-            type: 'quiz',
-            title: 'Quiz',
-            subtitle: '5 Questions',
-            url: `/quiz/${Date.now()}`,
-          },
-        ],
+        ] : undefined,
         timestamp: new Date(),
       };
 
       setMessages((prev) => [...prev, aiMessage]);
+    } catch (error) {
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: 'Unable to contact backend chat service. Please try again.',
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+      console.error(error);
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
   };
 
   const getCardIcon = (type: string) => {

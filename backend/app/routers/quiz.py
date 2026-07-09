@@ -1,18 +1,13 @@
 from fastapi import APIRouter
-router=APIRouter(prefix="/quiz",tags=["Quiz"])
-@router.get("/topics")
-@router.get("/topics")
-def topics():
-    return {"message": "Topics"}
+from app.services.quiz_service import quiz_service
 
-@router.get("/questions")
-def questions():
-    return {"message": "Questions"}
+router = APIRouter(
+    prefix="/quiz",
+    tags=["Quiz"]
+)
 
-@router.post("/submit")
-def submit():
-    return {"message": "Quiz Submitted"}
 
-@router.get("/history")
-def history():
-    return {"message": "Quiz History"}
+@router.get("/{user_id}")
+def get_quizzes(user_id: str):
+
+    return quiz_service.get_quizzes(user_id)

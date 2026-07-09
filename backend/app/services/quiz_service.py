@@ -1,16 +1,51 @@
+from app.core.database import supabase
+
+
 class QuizService:
 
-    def get_topics(self):
-        ...
+    def save_quiz(self, data: dict):
 
-    def get_questions(self, topic, difficulty, limit):
-        ...
+        payload = {
+            "user_id": data.get("user_id"),
+            "topic": data.get("topic"),
+            "score": data.get("score"),
+            "answers": data.get("answers"),
+            "created_at": data.get("created_at")
+        }
 
-    def create_quiz_session(self):
-        ...
+        response = (
+            supabase
+            .table("user_quizzes")
+            .insert(payload)
+            .execute()
+        )
 
-    def submit_answers(self, data):
-        ...
+        return response.data
 
-    def get_history(self):
-        ...
+    def get_quizzes(self, user_id: str):
+
+        response = (
+            supabase
+            .table("user_quizzes")
+            .select("*")
+            .eq("user_id", user_id)
+            .execute()
+        )
+
+        return response.data
+
+    def get_quiz(self, quiz_id: str):
+
+        response = (
+            supabase
+            .table("user_quizzes")
+            .select("*")
+            .eq("id", quiz_id)
+            .single()
+            .execute()
+        )
+
+        return response.data
+
+
+quiz_service = QuizService()

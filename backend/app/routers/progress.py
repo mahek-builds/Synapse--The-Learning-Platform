@@ -1,18 +1,13 @@
 from fastapi import APIRouter
+from app.services.progress_service import progress_service
 
 router = APIRouter(
     prefix="/progress",
     tags=["Progress"]
 )
 
-@router.get("/stats")
-def stats():
-    return {"message": "Progress"}
 
-@router.get("/skills")
-def skills():
-    return {"message": "Skills"}
+@router.get("/{user_id}")
+def get_progress(user_id: str):
 
-@router.get("/achievements")
-def achievements():
-    return {"message": "Achievements"}
+    return progress_service.get_progress(user_id)

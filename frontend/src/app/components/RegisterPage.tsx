@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Brain, Mail, Lock, User, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 
 const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
