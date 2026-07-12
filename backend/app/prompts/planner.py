@@ -13,15 +13,19 @@ Possible intents:
 - quiz
 - review
 - roadmap
+- chat (for general greetings, off-topic questions, or casual conversation)
 
 Return ONLY JSON.
 
 Example:
 
-{
+{{
     "intent": "learn",
     "topic": "Binary Trees",
     "skill_level": "beginner",
     "suggested_difficulty": "easy"
-}
+}}
+
+User Message:
+{message}
 """

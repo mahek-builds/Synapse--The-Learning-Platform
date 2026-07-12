@@ -7,6 +7,7 @@ from app.services.chat_service import chat_service
 from app.services.langgraph_service import Langgraph
 from app.agents.state import LearningState
 
+
 router = APIRouter(
     prefix="/chat",
     tags=["Chat"]
@@ -58,7 +59,13 @@ async def chat(request: ChatRequest):
         response_chunks=[]
     )
 
-    ai_response = await Langgraph().invoke(state)
+    import traceback
+
+    try:
+        ai_response = await Langgraph().invoke(state)
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
     response_text = ""
     topic = ""

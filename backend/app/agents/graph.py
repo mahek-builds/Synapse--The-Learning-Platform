@@ -8,6 +8,7 @@ from app.agents.nodes import (
     quiz_node,
     evaluator_node,
     roadmap_node,
+    chat_node,
 )
 
 
@@ -22,6 +23,7 @@ builder.add_node("research", research_node)
 builder.add_node("quiz", quiz_node)
 builder.add_node("evaluator", evaluator_node)
 builder.add_node("roadmap", roadmap_node)
+builder.add_node("chat", chat_node)
 
 
 # Entry Point
@@ -35,6 +37,9 @@ def route(state: LearningState) -> str:
     """
 
     intent = state.get("intent", "").lower()
+
+    if intent == "chat":
+        return "chat"
 
     if intent == "quiz":
         return "quiz"
@@ -56,8 +61,13 @@ builder.add_conditional_edges(
     {
         "teacher": "teacher",
         "quiz": "quiz",
+        "chat": "chat",
     },
 )
+
+
+# Chat Flow
+builder.add_edge("chat", END)
 
 
 # Learning Flow

@@ -15,6 +15,7 @@ class LearningState(TypedDict):
     suggested_difficulty: int
 
     # Agent outputs
+    response: str
     explanation: str
     code_examples: str
     diagram: str

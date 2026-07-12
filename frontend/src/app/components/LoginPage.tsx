@@ -4,9 +4,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { Link } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-const recaptchaSiteKey = (import.meta as ImportMeta & {
-  env: { VITE_RECAPTCHA_SITE_KEY?: string };
-}).env.VITE_RECAPTCHA_SITE_KEY;
+const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 export function LoginPage({ onLogin }: { onLogin: () => void }) {
   const [email, setEmail] = useState('');
@@ -81,13 +79,19 @@ export function LoginPage({ onLogin }: { onLogin: () => void }) {
               </a>
             </div>
 
-            <div className="flex justify-center">
-              <ReCAPTCHA
-                sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                onChange={(token) => setCaptchaToken(token)}
-                onExpired={() => setCaptchaToken(null)}
-              />
-            </div>
+            {recaptchaSiteKey ? (
+              <div className="flex justify-center">
+                <ReCAPTCHA
+                  sitekey={recaptchaSiteKey}
+                  onChange={(token) => setCaptchaToken(token)}
+                  onExpired={() => setCaptchaToken(null)}
+                />
+              </div>
+            ) : (
+              <div className="my-6 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+                reCAPTCHA site key is missing. Login will continue without CAPTCHA.
+              </div>
+            )}
 
             <button
               type="submit"
@@ -97,20 +101,6 @@ export function LoginPage({ onLogin }: { onLogin: () => void }) {
               <ArrowRight className="size-5" />
             </button>
           </form>
-
-          {recaptchaSiteKey ? (
-            <div className="my-6 flex items-center justify-center">
-              <ReCAPTCHA
-                sitekey={recaptchaSiteKey}
-                onChange={(token) => setCaptchaToken(token)}
-                onExpired={() => setCaptchaToken(null)}
-              />
-            </div>
-          ) : (
-            <div className="my-6 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-              reCAPTCHA site key is missing. Login will continue without CAPTCHA.
-            </div>
-          )}
 
           <div className="my-6 flex items-center gap-3">
             <div className="h-px flex-1 bg-slate-200" />
