@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Plus, Mic, Send, BookOpen, BarChart3, Brain, ExternalLink } from 'lucide-react';
 
 interface Message {
@@ -18,31 +18,68 @@ interface ResultCard {
 }
 
 const getStoredUserId = () => {
-  if (typeof window === 'undefined') return 'guest';
+  if (typeof window === 'undefined') return '00000000-0000-0000-0000-000000000000';
   let stored = window.localStorage.getItem('synapse_user_id');
-  if (!stored) {
-    stored = `guest-${Math.random().toString(36).slice(2, 10)}`;
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!stored || !uuidRegex.test(stored)) {
+    try {
+      stored = window.crypto.randomUUID();
+    } catch (e) {
+      stored = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    }
     window.localStorage.setItem('synapse_user_id', stored);
   }
   return stored;
 };
 
-const getStoredSessionId = () => {
-  if (typeof window === 'undefined') return null;
-  return window.localStorage.getItem('synapse_session_id');
-};
 
 export function ClaudeChat({
-  onCardClick
+  onCardClick,
+  sessionId,
+  onSessionCreated,
+  onSessionUpdated,
 }: {
   onCardClick: (type: string, data: any) => void;
+  sessionId: string | null;
+  onSessionCreated: (sessionId: string) => void;
+  onSessionUpdated: () => void;
 }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [sessionId, setSessionId] = useState<string | null>(getStoredSessionId());
   const [userId] = useState<string>(getStoredUserId);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!sessionId) {
+      setMessages([]);
+      return;
+    }
+
+    let cancelled = false;
+    fetch(`/chat/messages/${sessionId}`)
+      .then((response) => {
+        if (!response.ok) throw new Error('Unable to load messages');
+        return response.json();
+      })
+      .then((data: Array<{ id?: string; sender: 'user' | 'ai'; content: string; created_at: string }>) => {
+        if (!cancelled) {
+          setMessages(data.map((message, index) => ({
+            id: message.id || `${sessionId}-${index}`,
+            type: message.sender,
+            content: message.content,
+            timestamp: new Date(message.created_at),
+          })));
+        }
+      })
+      .catch((error) => console.error('Unable to load messages:', error));
+
+    return () => { cancelled = true; };
+  }, [sessionId]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -75,9 +112,8 @@ export function ClaudeChat({
       }
 
       const data = await response.json();
-      if (data.session_id) {
-        window.localStorage.setItem('synapse_session_id', data.session_id);
-        setSessionId(data.session_id);
+      if (data.session_id && !sessionId) {
+        onSessionCreated(data.session_id);
       }
 
       const aiMessage: Message = {
@@ -97,6 +133,7 @@ export function ClaudeChat({
       };
 
       setMessages((prev) => [...prev, aiMessage]);
+      onSessionUpdated();
     } catch (error) {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),

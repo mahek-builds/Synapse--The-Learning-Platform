@@ -1,4 +1,13 @@
+import uuid
 from app.core.database import supabase
+
+
+def is_valid_uuid(val):
+    try:
+        uuid.UUID(str(val))
+        return True
+    except ValueError:
+        return False
 
 
 class ProgressService:
@@ -13,6 +22,9 @@ class ProgressService:
             "updated_at": data.get("updated_at")
         }
 
+        if not is_valid_uuid(payload["user_id"]):
+            return [payload]
+
         response = (
             supabase
             .table("user_progress")
@@ -23,6 +35,9 @@ class ProgressService:
         return response.data
 
     def get_progress(self, user_id: str):
+
+        if not is_valid_uuid(user_id):
+            return []
 
         response = (
             supabase
@@ -35,6 +50,9 @@ class ProgressService:
         return response.data
 
     def update_progress(self, progress_id: str, data: dict):
+
+        if not is_valid_uuid(progress_id):
+            return []
 
         response = (
             supabase

@@ -22,7 +22,13 @@ async def chat(request: ChatRequest):
     if request.session_id:
         session = chat_service.get_session(request.session_id)
         if session is None:
-            raise HTTPException(status_code=404, detail="Chat session not found")
+            chat_service.create_session({
+                "id": session_id,
+                "user_id": request.user_id,
+                "title": None,
+                "topic": None,
+                "created_at": datetime.utcnow().isoformat()
+            })
     else:
         chat_service.create_session({
             "id": session_id,

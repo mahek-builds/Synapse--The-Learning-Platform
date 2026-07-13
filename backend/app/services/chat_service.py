@@ -1,8 +1,17 @@
+import uuid
 from datetime import datetime
 import logging
 from app.core.database import supabase
 
 logger = logging.getLogger(__name__)
+
+
+def is_valid_uuid(val):
+    try:
+        uuid.UUID(str(val))
+        return True
+    except ValueError:
+        return False
 
 
 class ChatService:
@@ -26,6 +35,10 @@ class ChatService:
         # Store in-memory first
         self._sessions[payload["id"]] = payload
 
+        if not is_valid_uuid(payload["id"]) or not is_valid_uuid(payload["user_id"]):
+            logger.warning("Invalid UUID format for session or user; using in-memory fallback.")
+            return [payload]
+
         try:
             response = (
                 supabase
@@ -39,6 +52,9 @@ class ChatService:
             return [payload]
 
     def get_sessions(self, user_id: str):
+
+        if not is_valid_uuid(user_id):
+            return [s for s in self._sessions.values() if s["user_id"] == user_id]
 
         try:
             response = (
@@ -54,6 +70,9 @@ class ChatService:
             return [s for s in self._sessions.values() if s["user_id"] == user_id]
 
     def get_session(self, session_id: str):
+
+        if not is_valid_uuid(session_id):
+            return self._sessions.get(session_id)
 
         try:
             response = (
@@ -74,6 +93,9 @@ class ChatService:
         self._sessions.pop(session_id, None)
         self._messages = [m for m in self._messages if m["session_id"] != session_id]
 
+        if not is_valid_uuid(session_id):
+            return []
+
         try:
             response = (
                 supabase
@@ -92,6 +114,9 @@ class ChatService:
         if session_id in self._sessions:
             self._sessions[session_id].update(data)
             self._sessions[session_id]["updated_at"] = datetime.utcnow().isoformat()
+
+        if not is_valid_uuid(session_id):
+            return [self._sessions.get(session_id)] if session_id in self._sessions else []
 
         try:
             response = (
@@ -119,6 +144,9 @@ class ChatService:
         # Store in-memory first
         self._messages.append(payload)
 
+        if not is_valid_uuid(payload["session_id"]):
+            return [payload]
+
         try:
             response = (
                 supabase
@@ -132,6 +160,9 @@ class ChatService:
             return [payload]
 
     def get_messages(self, session_id: str):
+
+        if not is_valid_uuid(session_id):
+            return [m for m in self._messages if m["session_id"] == session_id]
 
         try:
             response = (
