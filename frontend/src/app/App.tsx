@@ -27,11 +27,14 @@ function getStoredUserId() {
 }
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return window.localStorage.getItem('synapse_authenticated') === 'true';
+  });
   const [showProfile, setShowProfile] = useState(false);
   const [currentView, setCurrentView] = useState<'chat' | 'quiz' | 'explanation' | 'diagram'>('chat');
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+  const [activeCardData, setActiveCardData] = useState<any>(null);
 
   const loadSessions = useCallback(async () => {
     try {
@@ -49,10 +52,12 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    window.localStorage.setItem('synapse_authenticated', String(isAuthenticated));
     if (isAuthenticated) loadSessions();
   }, [isAuthenticated, loadSessions]);
 
-  const handleCardClick = (type: string) => {
+  const handleCardClick = (type: string, data: any) => {
+    setActiveCardData(data);
     if (type === 'quiz') setCurrentView('quiz');
     else if (type === 'explanation') setCurrentView('explanation');
     else if (type === 'diagram') setCurrentView('diagram');
@@ -64,15 +69,19 @@ export default function App() {
   };
 
   const handleDeleteSession = (sessionId: string) => {
-    // The current backend has no DELETE endpoint, so this removes it from this UI only.
     setSessions((current) => current.filter((session) => session.id !== sessionId));
     if (activeSessionId === sessionId) setActiveSessionId(null);
   };
 
+  const handleCloseFullPage = () => {
+    setCurrentView('chat');
+    setActiveCardData(null);
+  };
+
   const renderAuthenticatedApp = () => {
-    if (currentView === 'quiz') return <FullPageQuiz onClose={() => setCurrentView('chat')} />;
-    if (currentView === 'explanation') return <FullPageExplanation onClose={() => setCurrentView('chat')} />;
-    if (currentView === 'diagram') return <FullPageDiagram onClose={() => setCurrentView('chat')} />;
+    if (currentView === 'quiz') return <FullPageQuiz onClose={handleCloseFullPage} data={activeCardData} />;
+    if (currentView === 'explanation') return <FullPageExplanation onClose={handleCloseFullPage} data={activeCardData} />;
+    if (currentView === 'diagram') return <FullPageDiagram onClose={handleCloseFullPage} />;
 
     return (
       <div className="flex h-screen bg-[#FAFAF8]">

@@ -7,6 +7,9 @@ interface Message {
   content: string;
   cards?: ResultCard[];
   timestamp: Date;
+  explanation?: string;
+  diagram?: string;
+  questions?: string;
 }
 
 interface ResultCard {
@@ -36,6 +39,34 @@ const getStoredUserId = () => {
   return stored;
 };
 
+function buildCards(
+  hasExplanation: boolean,
+  hasQuestions: boolean,
+  topic: string,
+  idSuffix: string | number,
+): ResultCard[] | undefined {
+  if (!hasExplanation && !hasQuestions) return undefined;
+  return [
+    ...(hasExplanation
+      ? [{
+          id: `exp-${idSuffix}`,
+          type: 'explanation' as const,
+          title: `Explanation: ${topic}`,
+          subtitle: 'Read the detailed generated explanation',
+          url: '#',
+        }]
+      : []),
+    ...(hasQuestions
+      ? [{
+          id: `quiz-${idSuffix}`,
+          type: 'quiz' as const,
+          title: `Quiz: ${topic}`,
+          subtitle: 'Test your understanding with a quick quiz',
+          url: '#',
+        }]
+      : []),
+  ];
+}
 
 export function ClaudeChat({
   onCardClick,
@@ -53,10 +84,24 @@ export function ClaudeChat({
   const [isLoading, setIsLoading] = useState(false);
   const [userId] = useState<string>(getStoredUserId);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const skipNextFetchRef = useRef(false);
 
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isLoading]);
+
+  // Load messages when session changes
   useEffect(() => {
     if (!sessionId) {
       setMessages([]);
+      return;
+    }
+
+    // Skip fetch if we just handled a response locally (avoids race condition)
+    if (skipNextFetchRef.current) {
+      skipNextFetchRef.current = false;
       return;
     }
 
@@ -66,19 +111,32 @@ export function ClaudeChat({
         if (!response.ok) throw new Error('Unable to load messages');
         return response.json();
       })
-      .then((data: Array<{ id?: string; sender: 'user' | 'ai'; content: string; created_at: string }>) => {
+      .then((data: Array<{ id?: string; sender: 'user' | 'ai'; content: string; created_at: string; metadata?: any }>) => {
         if (!cancelled) {
-          setMessages(data.map((message, index) => ({
-            id: message.id || `${sessionId}-${index}`,
-            type: message.sender,
-            content: message.content,
-            timestamp: new Date(message.created_at),
-          })));
+          setMessages(
+            data.map((message, index) => {
+              const metadata = message.metadata || {};
+              const topic = metadata.topic || 'Topic';
+
+              return {
+                id: message.id || `${sessionId}-${index}`,
+                type: message.sender,
+                content: message.content,
+                explanation: metadata.explanation,
+                diagram: metadata.diagram,
+                questions: metadata.questions,
+                timestamp: new Date(message.created_at),
+                cards: buildCards(!!metadata.explanation, !!metadata.questions, topic, index),
+              };
+            }),
+          );
         }
       })
       .catch((error) => console.error('Unable to load messages:', error));
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [sessionId]);
 
   const handleSend = async () => {
@@ -112,27 +170,30 @@ export function ClaudeChat({
       }
 
       const data = await response.json();
-      if (data.session_id && !sessionId) {
-        onSessionCreated(data.session_id);
-      }
+
+      const topic = data.topic || 'Topic';
+      const now = Date.now();
 
       const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: (now + 1).toString(),
         type: 'ai',
         content: data.response || 'Sorry, I could not get a response from the server.',
-        cards: data.topic || data.intent ? [
-          {
-            id: `topic-${Date.now()}`,
-            type: 'explanation',
-            title: data.topic ? `Topic: ${data.topic}` : `Intent: ${data.intent}`,
-            subtitle: 'Response returned by backend AI',
-            url: '#',
-          },
-        ] : undefined,
+        explanation: data.explanation,
+        diagram: data.diagram,
+        questions: data.questions,
+        cards: buildCards(!!data.explanation, !!data.questions, topic, now),
         timestamp: new Date(),
       };
 
+      // Add the AI message FIRST, then notify about session creation
       setMessages((prev) => [...prev, aiMessage]);
+
+      if (data.session_id && !sessionId) {
+        // Skip the next useEffect message fetch since we already have the messages locally
+        skipNextFetchRef.current = true;
+        onSessionCreated(data.session_id);
+      }
+
       onSessionUpdated();
     } catch (error) {
       const errorMessage: Message = {
@@ -150,10 +211,14 @@ export function ClaudeChat({
 
   const getCardIcon = (type: string) => {
     switch (type) {
-      case 'explanation': return BookOpen;
-      case 'diagram': return BarChart3;
-      case 'quiz': return Brain;
-      default: return BookOpen;
+      case 'explanation':
+        return BookOpen;
+      case 'diagram':
+        return BarChart3;
+      case 'quiz':
+        return Brain;
+      default:
+        return BookOpen;
     }
   };
 
@@ -191,13 +256,25 @@ export function ClaudeChat({
                       if (boldRegex.test(line)) {
                         return (
                           <p key={idx} className="mb-2">
-                            {line.split(boldRegex).map((part, i) =>
-                              i % 2 === 1 ? <strong key={i} className="font-semibold">{part}</strong> : part
+                            {line.split(/\*\*(.*?)\*\*/g).map((part, i) =>
+                              i % 2 === 1 ? (
+                                <strong key={i} className="font-semibold">
+                                  {part}
+                                </strong>
+                              ) : (
+                                part
+                              ),
                             )}
                           </p>
                         );
                       }
-                      return line ? <p key={idx} className="mb-2">{line}</p> : <br key={idx} />;
+                      return line ? (
+                        <p key={idx} className="mb-2">
+                          {line}
+                        </p>
+                      ) : (
+                        <br key={idx} />
+                      );
                     })}
                   </div>
 
@@ -209,7 +286,13 @@ export function ClaudeChat({
                         return (
                           <button
                             key={card.id}
-                            onClick={() => onCardClick(card.type, { title: card.title, url: card.url })}
+                            onClick={() =>
+                              onCardClick(card.type, {
+                                title: card.title,
+                                url: card.url,
+                                content: card.type === 'explanation' ? message.explanation : message.questions,
+                              })
+                            }
                             className="group flex items-start gap-4 rounded-xl border border-black/10 bg-white p-4 text-left shadow-sm transition-all hover:shadow-md"
                           >
                             <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[#6366F1] to-[#EC4899]">
@@ -251,6 +334,8 @@ export function ClaudeChat({
               </div>
             </div>
           )}
+
+          <div ref={messagesEndRef} />
         </div>
       </div>
 
@@ -259,13 +344,7 @@ export function ClaudeChat({
         <div className="mx-auto w-[680px]">
           <div className="overflow-hidden rounded-xl border border-black/10 bg-white shadow-lg">
             <div className="flex items-center gap-3 px-4 py-3">
-              <input
-                ref={fileInputRef}
-                type="file"
-                multiple
-                className="hidden"
-                accept="image/*,.pdf,.doc,.docx,.txt"
-              />
+              <input ref={fileInputRef} type="file" multiple className="hidden" accept="image/*,.pdf,.doc,.docx,.txt" />
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="flex size-9 shrink-0 items-center justify-center rounded-lg text-[#6B6B6B] transition-colors hover:bg-[#F5F3EF]"

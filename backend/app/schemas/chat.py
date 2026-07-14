@@ -55,3 +55,10 @@ class ChatResponse(BaseModel):
     response: str
     topic: str
     intent: str
+    explanation: Optional[str] = None
+    code_examples: Optional[str] = None
+    diagram: Optional[str] = None
+    questions: Optional[str] = None
+    resources: Optional[str] = None
+    feedback: Optional[str] = None
+    suggested_path: Optional[str] = None

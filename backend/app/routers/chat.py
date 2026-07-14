@@ -73,9 +73,17 @@ async def chat(request: ChatRequest):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
+    import json
     response_text = ""
     topic = ""
     intent = ""
+    explanation = ""
+    code_examples = ""
+    diagram = ""
+    questions = ""
+    resources = ""
+    feedback = ""
+    suggested_path = ""
 
     if isinstance(ai_response, dict):
         response_text = (
@@ -86,6 +94,20 @@ async def chat(request: ChatRequest):
         )
         topic = ai_response.get("topic") or ""
         intent = ai_response.get("intent") or ""
+        explanation = ai_response.get("explanation") or ""
+        code_examples = ai_response.get("code_examples") or ""
+        diagram = ai_response.get("diagram") or ""
+        
+        q_val = ai_response.get("questions") or ""
+        questions = json.dumps(q_val) if isinstance(q_val, (list, dict)) else str(q_val)
+        
+        r_val = ai_response.get("resources") or ""
+        resources = json.dumps(r_val) if isinstance(r_val, (list, dict)) else str(r_val)
+        
+        feedback = ai_response.get("feedback") or ""
+        
+        p_val = ai_response.get("suggested_path") or ""
+        suggested_path = json.dumps(p_val) if isinstance(p_val, (list, dict)) else str(p_val)
     else:
         response_text = str(ai_response)
 
@@ -102,6 +124,13 @@ async def chat(request: ChatRequest):
         "metadata": {
             "intent": intent,
             "topic": topic,
+            "explanation": explanation,
+            "code_examples": code_examples,
+            "diagram": diagram,
+            "questions": questions,
+            "resources": resources,
+            "feedback": feedback,
+            "suggested_path": suggested_path,
         },
         "created_at": datetime.utcnow().isoformat()
     })
@@ -110,7 +139,14 @@ async def chat(request: ChatRequest):
         "session_id": session_id,
         "response": response_text,
         "topic": topic,
-        "intent": intent
+        "intent": intent,
+        "explanation": explanation,
+        "code_examples": code_examples,
+        "diagram": diagram,
+        "questions": questions,
+        "resources": resources,
+        "feedback": feedback,
+        "suggested_path": suggested_path
     }
 
 

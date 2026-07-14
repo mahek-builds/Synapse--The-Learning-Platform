@@ -7,8 +7,14 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      '/api': 'http://localhost:8000',
-      '/chat': 'http://localhost:8000'
+      '/api': {
+        target: 'http://localhost:8000',
+        timeout: 180000, // 3 minutes - LangGraph agents take ~60-90s
+      },
+      '/chat': {
+        target: 'http://localhost:8000',
+        timeout: 180000,
+      }
     }
   }
 })

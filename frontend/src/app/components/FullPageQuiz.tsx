@@ -1,72 +1,171 @@
-import { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 
-interface Question {
+interface ParsedQuestion {
   id: string;
   question: string;
   options: string[];
-  correctAnswer: number;
+  correctAnswer: number; // index in options
 }
 
-const questions: Question[] = [
-  {
-    id: '1',
-    question: 'What is the primary purpose of React hooks?',
-    options: [
-      'To manage state and side effects in functional components',
-      'To replace class components entirely',
-      'To improve application performance',
-      'To handle routing in React applications',
-    ],
-    correctAnswer: 0,
-  },
-  {
-    id: '2',
-    question: 'Which hook is used to perform side effects in React?',
-    options: ['useState', 'useEffect', 'useContext', 'useReducer'],
-    correctAnswer: 1,
-  },
-  {
-    id: '3',
-    question: 'What does the dependency array in useEffect control?',
-    options: [
-      'The order of effect execution',
-      'When the effect should re-run',
-      'Which components can use the effect',
-      'The cleanup function timing',
-    ],
-    correctAnswer: 1,
-  },
-  {
-    id: '4',
-    question: 'What is the purpose of useState hook?',
-    options: [
-      'To fetch data from APIs',
-      'To add state to functional components',
-      'To optimize rendering performance',
-      'To manage global application state',
-    ],
-    correctAnswer: 1,
-  },
-  {
-    id: '5',
-    question: 'When should you use useCallback hook?',
-    options: [
-      'To memoize expensive calculations',
-      'To prevent unnecessary re-renders of child components',
-      'To manage component lifecycle',
-      'To handle asynchronous operations',
-    ],
-    correctAnswer: 1,
-  },
-];
+interface FullPageQuizProps {
+  onClose: () => void;
+  data?: {
+    title?: string;
+    content?: string;
+  } | null;
+}
 
-export function FullPageQuiz({ onClose }: { onClose: () => void }) {
+/**
+ * Attempts to parse questions from the backend text.
+ * Supports formats like:
+ * 1. What is X?
+ * A) option
+ * B) option
+ * C) option  
+ * D) option
+ * Answer: A
+ *
+ * Or JSON array of {question, options, correctAnswer}
+ */
+function parseQuestions(text: string): ParsedQuestion[] {
+  if (!text) return [];
+
+  // Try JSON parse first
+  try {
+    const parsed = JSON.parse(text);
+    if (Array.isArray(parsed)) {
+      return parsed.map((q: any, idx: number) => ({
+        id: String(idx),
+        question: q.question || q.text || `Question ${idx + 1}`,
+        options: q.options || q.choices || [],
+        correctAnswer: typeof q.correctAnswer === 'number' ? q.correctAnswer : (typeof q.correct_answer === 'number' ? q.correct_answer : 0),
+      }));
+    }
+  } catch {
+    // Not JSON, try text parsing
+  }
+
+  // Try to parse text-based quiz format
+  const questions: ParsedQuestion[] = [];
+
+  // Split by question numbers: "1.", "2.", etc.
+  const questionBlocks = text.split(/(?=\d+[\.\)]\s)/);
+
+  for (const block of questionBlocks) {
+    const trimmed = block.trim();
+    if (!trimmed) continue;
+
+    // Extract question text (first line)
+    const lines = trimmed.split('\n').map((l) => l.trim()).filter(Boolean);
+    if (lines.length < 2) continue;
+
+    // First line is question number + text
+    const questionMatch = lines[0].match(/^\d+[\.\)]\s*(.*)/);
+    const questionText = questionMatch ? questionMatch[1] : lines[0];
+
+    // Remaining lines are options
+    const options: string[] = [];
+    let correctIdx = 0;
+
+    for (let i = 1; i < lines.length; i++) {
+      const optMatch = lines[i].match(/^([A-Da-d])[\.\)]\s*(.*)/);
+      if (optMatch) {
+        options.push(optMatch[2]);
+      }
+
+      // Check for answer line
+      const answerMatch = lines[i].match(/^(?:Answer|Correct)\s*[:\-]\s*([A-Da-d])/i);
+      if (answerMatch) {
+        correctIdx = answerMatch[1].toUpperCase().charCodeAt(0) - 65;
+      }
+    }
+
+    if (options.length >= 2) {
+      questions.push({
+        id: String(questions.length),
+        question: questionText,
+        options,
+        correctAnswer: correctIdx,
+      });
+    }
+  }
+
+  return questions;
+}
+
+export function FullPageQuiz({ onClose, data }: FullPageQuizProps) {
+  const title = data?.title?.replace(/^Quiz:\s*/i, '') || 'Quiz';
+  const content = data?.content || '';
+
+  const questions = useMemo(() => parseQuestions(content), [content]);
+  const hasStructuredQuestions = questions.length > 0;
+
+  // --- Structured quiz state ---
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [answers, setAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
+  const [answers, setAnswers] = useState<(number | null)[]>(Array(Math.max(questions.length, 1)).fill(null));
   const [showResults, setShowResults] = useState(false);
 
+  // --- Plain text quiz state ---
+  const [showAnswers, setShowAnswers] = useState(false);
+
+  // If we couldn't parse structured questions, show the raw text beautifully
+  if (!hasStructuredQuestions) {
+    return (
+      <div className="flex min-h-screen flex-col bg-white">
+        {/* Header */}
+        <div className="border-b border-black/10 px-6 py-4">
+          <div className="mx-auto flex max-w-[720px] items-center gap-3">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#6366F1] to-[#EC4899]">
+              <span className="text-xs font-bold text-white">🧠</span>
+            </div>
+            <h1 className="font-serif text-lg font-semibold text-[#1A1A1A]">{title}</h1>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-auto px-6 py-12">
+          <div className="mx-auto w-full max-w-[720px]">
+            {content ? (
+              <>
+                <div className="whitespace-pre-wrap rounded-2xl border border-black/10 bg-[#FAFAF8] p-8 text-sm leading-relaxed text-[#1A1A1A]">
+                  {content}
+                </div>
+                <button
+                  onClick={() => setShowAnswers(!showAnswers)}
+                  className="mt-6 flex items-center gap-2 rounded-xl border border-black/10 px-6 py-3 text-sm font-medium text-[#1A1A1A] transition-all hover:bg-[#FAFAF8]"
+                >
+                  {showAnswers ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  {showAnswers ? 'Hide Answers' : 'Show Answers'}
+                </button>
+              </>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <p className="text-lg text-[#6B6B6B]">No quiz content available.</p>
+                <p className="mt-2 text-sm text-[#999]">Ask Synapse AI a question to generate a quiz.</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <div className="border-t border-black/10 px-6 py-6">
+          <div className="mx-auto flex max-w-[720px] items-center justify-end">
+            <button
+              onClick={onClose}
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#6366F1] to-[#EC4899] px-8 py-3 font-medium text-white shadow-lg transition-all hover:opacity-90"
+            >
+              Back to Chat
+              <ArrowRight className="size-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- Structured Quiz UI ---
   const currentQuestion = questions[currentStep];
   const isLastQuestion = currentStep === questions.length - 1;
 
@@ -87,7 +186,7 @@ export function FullPageQuiz({ onClose }: { onClose: () => void }) {
 
   if (showResults) {
     const score = answers.reduce<number>((acc, answer, idx) => {
-      return answer === questions[idx].correctAnswer ? acc + 1 : acc;
+      return answer === questions[idx]?.correctAnswer ? acc + 1 : acc;
     }, 0);
     const percentage = Math.round((score / questions.length) * 100);
 
@@ -97,11 +196,17 @@ export function FullPageQuiz({ onClose }: { onClose: () => void }) {
           <div className="mb-6 text-6xl">🎉</div>
           <h1 className="mb-4 font-serif text-4xl text-[#1A1A1A]">Quiz Complete!</h1>
           <p className="mb-8 text-lg text-[#6B6B6B]">
-            You scored <span className="bg-gradient-to-r from-[#6366F1] to-[#EC4899] bg-clip-text font-semibold text-transparent">{score}</span> out of {questions.length}
+            You scored{' '}
+            <span className="bg-gradient-to-r from-[#6366F1] to-[#EC4899] bg-clip-text font-semibold text-transparent">
+              {score}
+            </span>{' '}
+            out of {questions.length}
           </p>
 
           <div className="mb-8 rounded-2xl border border-black/10 bg-[#FAFAF8] p-8">
-            <div className="mb-4 bg-gradient-to-r from-[#6366F1] to-[#EC4899] bg-clip-text text-7xl font-bold text-transparent">{percentage}%</div>
+            <div className="mb-4 bg-gradient-to-r from-[#6366F1] to-[#EC4899] bg-clip-text text-7xl font-bold text-transparent">
+              {percentage}%
+            </div>
             <p className="text-[#6B6B6B]">
               {percentage >= 80 ? 'Excellent work!' : percentage >= 60 ? 'Good job!' : 'Keep practicing!'}
             </p>
@@ -140,9 +245,7 @@ export function FullPageQuiz({ onClose }: { onClose: () => void }) {
       {/* Question Area */}
       <div className="flex flex-1 items-center justify-center px-6 py-12">
         <div className="w-full max-w-[720px]">
-          <h2 className="mb-8 text-center font-serif text-2xl text-[#1A1A1A]">
-            {currentQuestion.question}
-          </h2>
+          <h2 className="mb-8 text-center font-serif text-2xl text-[#1A1A1A]">{currentQuestion.question}</h2>
 
           <div className="space-y-3">
             {currentQuestion.options.map((option, idx) => (
@@ -163,9 +266,7 @@ export function FullPageQuiz({ onClose }: { onClose: () => void }) {
                         : 'border-black/20'
                     }`}
                   >
-                    {selectedAnswer === idx && (
-                      <div className="size-2 rounded-full bg-white" />
-                    )}
+                    {selectedAnswer === idx && <div className="size-2 rounded-full bg-white" />}
                   </div>
                   <span className="text-[#1A1A1A]">{option}</span>
                 </div>
