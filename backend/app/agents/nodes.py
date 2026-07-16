@@ -8,16 +8,16 @@ from app.prompts.evaluator import EVALUATOR_PROMPT
 from app.prompts.roadmap import ROADMAP_PROMPT
 from app.prompts.chat import CHAT_PROMPT
 
-from app.services.cohere_service import llm
+from app.services.cohere_service import llm, llm_fast
 
 
-def planner_node(state: LearningState):
+async def planner_node(state: LearningState):
 
     prompt = PLANNER_PROMPT.format(
         message=state["user_message"]
     )
 
-    response = llm.invoke(prompt)
+    response = await llm_fast.ainvoke(prompt)
     
     try:
         content = response.content.strip()
@@ -45,83 +45,83 @@ def planner_node(state: LearningState):
     return state
 
 
-def teacher_node(state: LearningState):
+async def teacher_node(state: LearningState):
 
     prompt = TEACHER_PROMPT.format(
         topic=state["topic"],
         skill_level=state["skill_level"]
     )
 
-    response = llm.invoke(prompt)
+    response = await llm.ainvoke(prompt)
 
     state["explanation"] = response.content
 
     return state
 
 
-def research_node(state: LearningState):
+async def research_node(state: LearningState):
 
     prompt = RESEARCH_PROMPT.format(
         topic=state["topic"]
     )
 
-    response = llm.invoke(prompt)
+    response = await llm.ainvoke(prompt)
 
     state["resources"] = response.content
 
     return state
 
 
-def quiz_node(state: LearningState):
+async def quiz_node(state: LearningState):
 
     prompt = QUIZ_PROMPT.format(
         topic=state["topic"],
         difficulty=state["suggested_difficulty"]
     )
 
-    response = llm.invoke(prompt)
+    response = await llm.ainvoke(prompt)
 
     state["questions"] = response.content
 
     return state
 
 
-def evaluator_node(state: LearningState):
+async def evaluator_node(state: LearningState):
 
     prompt = EVALUATOR_PROMPT.format(
         answers=state["questions"]
     )
 
-    response = llm.invoke(prompt)
+    response = await llm.ainvoke(prompt)
 
     state["feedback"] = response.content
 
     return state
 
 
-def roadmap_node(state: LearningState):
+async def roadmap_node(state: LearningState):
 
     prompt = ROADMAP_PROMPT.format(
         topic=state["topic"],
         skill_level=state["skill_level"]
     )
 
-    response = llm.invoke(prompt)
+    response = await llm.ainvoke(prompt)
 
     state["suggested_path"] = response.content
 
     return state
 
 
-def chat_node(state: LearningState):
+async def chat_node(state: LearningState):
 
     prompt = CHAT_PROMPT.format(
         message=state["user_message"]
     )
 
-    response = llm.invoke(prompt)
+    response = await llm.ainvoke(prompt)
 
     state["response"] = response.content
     state["explanation"] = response.content
 
-    return state
+    return state

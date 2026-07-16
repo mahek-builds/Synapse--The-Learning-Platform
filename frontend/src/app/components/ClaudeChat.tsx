@@ -139,23 +139,41 @@ export function ClaudeChat({
     };
   }, [sessionId]);
 
+  // ── SSE STREAMING handleSend ──────────────────────────────────
+  // Instead of:  fetch → wait for EVERYTHING → show response
+  // Now:         fetch → read CHUNKS as they arrive → update UI progressively
   const handleSend = async () => {
     if (!input.trim()) return;
 
+    // 1. Add user message to chat (same as before)
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
       content: input,
       timestamp: new Date(),
     };
-
     setMessages((prev) => [...prev, userMessage]);
     const currentInput = input;
     setInput('');
     setIsLoading(true);
 
+    // 2. Create an EMPTY AI message — user sees it immediately
+    //    We'll fill it in as chunks arrive from the server
+    const aiMessageId = (Date.now() + 1).toString();
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: aiMessageId,
+        type: 'ai',
+        content: '',  // empty for now — will be filled progressively
+        timestamp: new Date(),
+      },
+    ]);
+
     try {
-      const response = await fetch('/chat/', {
+      // 3. Call /chat/stream instead of /chat/
+      //    This returns SSE (Server-Sent Events) — data arrives in chunks
+      const response = await fetch('/chat/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -169,40 +187,93 @@ export function ClaudeChat({
         throw new Error(`Chat request failed: ${response.status}`);
       }
 
-      const data = await response.json();
+      // 4. Read the response as a STREAM (not response.json())
+      //    Think of it like reading a book page by page instead of
+      //    waiting for the whole book to be printed
+      const reader = response.body!.getReader();
+      const decoder = new TextDecoder();
 
-      const topic = data.topic || 'Topic';
-      const now = Date.now();
+      // Track accumulated data across chunks
+      let newSessionId = sessionId;
+      let topic = 'Topic';
+      let explanation = '';
+      let questions = '';
+      let latestContent = '';
 
-      const aiMessage: Message = {
-        id: (now + 1).toString(),
-        type: 'ai',
-        content: data.response || 'Sorry, I could not get a response from the server.',
-        explanation: data.explanation,
-        diagram: data.diagram,
-        questions: data.questions,
-        cards: buildCards(!!data.explanation, !!data.questions, topic, now),
-        timestamp: new Date(),
-      };
+      // 5. Read chunks in a loop until the stream ends
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;  // stream finished
 
-      // Add the AI message FIRST, then notify about session creation
-      setMessages((prev) => [...prev, aiMessage]);
+        // Convert raw bytes → text string
+        const text = decoder.decode(value, { stream: true });
 
-      if (data.session_id && !sessionId) {
-        // Skip the next useEffect message fetch since we already have the messages locally
-        skipNextFetchRef.current = true;
-        onSessionCreated(data.session_id);
+        // SSE sends data like: "data: {"node":"teacher","explanation":"..."}\n\n"
+        // There can be multiple events in one chunk, so we split by lines
+        const lines = text.split('\n');
+
+        for (const line of lines) {
+          // Only process lines that start with "data: "
+          if (!line.startsWith('data: ')) continue;
+
+          const payload = line.slice(6).trim();  // remove "data: " prefix
+          if (payload === '[DONE]') continue;     // stream complete signal
+
+          try {
+            // 6. Parse the JSON chunk from this node
+            const chunk = JSON.parse(payload);
+
+            // Track session ID and topic
+            if (chunk.session_id) newSessionId = chunk.session_id;
+            if (chunk.topic) topic = chunk.topic;
+
+            // Accumulate content from each node
+            if (chunk.explanation) explanation = chunk.explanation;
+            if (chunk.questions) questions = chunk.questions;
+
+            // Pick the main display content
+            const content = chunk.response || chunk.explanation || chunk.feedback || '';
+
+            if (content) {
+              latestContent = content;
+
+              // 7. UPDATE the existing AI message (don't add a new one!)
+              //    This is what makes the UI update progressively
+              setMessages((prev) =>
+                prev.map((m) =>
+                  m.id === aiMessageId
+                    ? {
+                        ...m,
+                        content: latestContent,
+                        explanation,
+                        questions,
+                        cards: buildCards(!!explanation, !!questions, topic, aiMessageId),
+                      }
+                    : m
+                )
+              );
+            }
+          } catch {
+            // Skip malformed chunks — sometimes partial data arrives
+          }
+        }
       }
 
+      // 8. Stream finished — handle session creation (same as before)
+      if (newSessionId && !sessionId) {
+        skipNextFetchRef.current = true;
+        onSessionCreated(newSessionId);
+      }
       onSessionUpdated();
     } catch (error) {
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: 'Unable to contact backend chat service. Please try again.',
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      // If streaming fails, show error in the AI message
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === aiMessageId
+            ? { ...m, content: 'Unable to contact backend. Please try again.' }
+            : m
+        )
+      );
       console.error(error);
     } finally {
       setIsLoading(false);

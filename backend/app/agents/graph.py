@@ -59,7 +59,7 @@ builder.add_conditional_edges(
     "planner",
     route,
     {
-        "teacher": "teacher",
+        "teacher": ["teacher", "research"],  # parallel fan-out!
         "quiz": "quiz",
         "chat": "chat",
     },
@@ -70,8 +70,8 @@ builder.add_conditional_edges(
 builder.add_edge("chat", END)
 
 
-# Learning Flow
-builder.add_edge("teacher", "research")
+# Learning Flow (PARALLELIZED — teacher and research run simultaneously)
+builder.add_edge("teacher", "evaluator")
 builder.add_edge("research", "evaluator")
 
 
