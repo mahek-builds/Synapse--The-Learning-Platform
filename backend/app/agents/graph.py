@@ -59,7 +59,7 @@ builder.add_conditional_edges(
     "planner",
     route,
     {
-        "teacher": ["teacher", "research"],  # parallel fan-out!
+        "teacher": "teacher",
         "quiz": "quiz",
         "chat": "chat",
     },

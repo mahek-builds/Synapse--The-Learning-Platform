@@ -21,25 +21,26 @@ router = APIRouter(
 async def chat(request: ChatRequest):
 
     session_id = request.session_id or str(uuid.uuid4())
+    initial_title = (request.message[:50] + "...") if len(request.message) > 50 else request.message
 
     if request.session_id:
         session = chat_service.get_session(request.session_id)
         if session is None:
-            asyncio.create_task(asyncio.to_thread(chat_service.create_session, {
+            await asyncio.to_thread(chat_service.create_session, {
                 "id": session_id,
                 "user_id": request.user_id,
-                "title": None,
+                "title": initial_title,
                 "topic": None,
                 "created_at": datetime.utcnow().isoformat()
-            }))
+            })
     else:
-        asyncio.create_task(asyncio.to_thread(chat_service.create_session, {
+        await asyncio.to_thread(chat_service.create_session, {
             "id": session_id,
             "user_id": request.user_id,
-            "title": None,
+            "title": initial_title,
             "topic": None,
             "created_at": datetime.utcnow().isoformat()
-        }))
+        })
 
     asyncio.create_task(asyncio.to_thread(chat_service.save_message, {
         "session_id": session_id,
@@ -115,10 +116,12 @@ async def chat(request: ChatRequest):
         response_text = str(ai_response)
 
     if topic:
-        asyncio.create_task(asyncio.to_thread(chat_service.update_session, session_id, {
+        update_data = {
             "topic": topic,
+            "title": topic,
             "updated_at": datetime.utcnow().isoformat()
-        }))
+        }
+        await asyncio.to_thread(chat_service.update_session, session_id, update_data)
 
     asyncio.create_task(asyncio.to_thread(chat_service.save_message, {
         "session_id": session_id,
@@ -180,24 +183,25 @@ async def chat_stream(request: ChatRequest):
     """
 
     session_id = request.session_id or str(uuid.uuid4())
+    initial_title = (request.message[:50] + "...") if len(request.message) > 50 else request.message
 
-    # ── Create session (fire-and-forget, same as /chat/) ─────────
+    # ── Create session — await so it exists before messages are saved ──
     if request.session_id:
         session = chat_service.get_session(request.session_id)
         if session is None:
-            asyncio.create_task(asyncio.to_thread(chat_service.create_session, {
+            await asyncio.to_thread(chat_service.create_session, {
                 "id": session_id,
                 "user_id": request.user_id,
-                "title": None, "topic": None,
+                "title": initial_title, "topic": None,
                 "created_at": datetime.utcnow().isoformat()
-            }))
+            })
     else:
-        asyncio.create_task(asyncio.to_thread(chat_service.create_session, {
+        await asyncio.to_thread(chat_service.create_session, {
             "id": session_id,
             "user_id": request.user_id,
-            "title": None, "topic": None,
+            "title": initial_title, "topic": None,
             "created_at": datetime.utcnow().isoformat()
-        }))
+        })
 
     # ── Save user message (fire-and-forget) ──────────────────────
     asyncio.create_task(asyncio.to_thread(chat_service.save_message, {
@@ -285,6 +289,7 @@ async def chat_stream(request: ChatRequest):
                 return json_lib.dumps(val)
             return str(val) if val else ""
 
+        # Save AI message (fire-and-forget is fine here)
         asyncio.create_task(asyncio.to_thread(chat_service.save_message, {
             "session_id": session_id,
             "sender": "ai",
@@ -303,13 +308,14 @@ async def chat_stream(request: ChatRequest):
             "created_at": datetime.utcnow().isoformat()
         }))
 
-        # Update session topic
+        # Update session topic AND title — await so it's saved
+        # before the frontend fetches the sessions list
         topic = accumulated.get("topic", "")
         if topic:
-            asyncio.create_task(asyncio.to_thread(
+            await asyncio.to_thread(
                 chat_service.update_session, session_id,
-                {"topic": topic, "updated_at": datetime.utcnow().isoformat()}
-            ))
+                {"topic": topic, "title": topic, "updated_at": datetime.utcnow().isoformat()}
+            )
 
     # ── Return StreamingResponse ─────────────────────────────────
     # This tells FastAPI: "don't wait for event_generator to finish,

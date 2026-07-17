@@ -264,6 +264,9 @@ export function ClaudeChat({
         skipNextFetchRef.current = true;
         onSessionCreated(newSessionId);
       }
+      // Small delay to let the backend finish saving the session
+      // title/topic (it runs after the [DONE] SSE signal)
+      await new Promise((resolve) => setTimeout(resolve, 600));
       onSessionUpdated();
     } catch (error) {
       // If streaming fails, show error in the AI message

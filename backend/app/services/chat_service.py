@@ -21,6 +21,29 @@ class ChatService:
         self._sessions = {}      # session_id -> session_dict
         self._messages = []      # list of message_dict
 
+    def _ensure_user_exists(self, user_id: str):
+        """Create a minimal app_users row if this user_id doesn't exist yet.
+        This prevents foreign-key violations on learning_sessions."""
+        if not is_valid_uuid(user_id):
+            return
+        try:
+            existing = (
+                supabase
+                .table("app_users")
+                .select("id")
+                .eq("id", user_id)
+                .execute()
+            )
+            if existing.data:
+                return  # already exists
+            supabase.table("app_users").insert({
+                "id": user_id,
+                "email": f"{user_id[:8]}@synapse.local",
+                "name": "Synapse User",
+            }).execute()
+        except Exception as e:
+            logger.warning(f"Could not ensure user exists: {e}")
+
     def create_session(self, data: dict):
 
         payload = {
@@ -40,6 +63,8 @@ class ChatService:
             return [payload]
 
         try:
+            # Ensure user exists in app_users before inserting session
+            self._ensure_user_exists(payload["user_id"])
             response = (
                 supabase
                 .table("learning_sessions")
@@ -62,6 +87,7 @@ class ChatService:
                 .table("learning_sessions")
                 .select("*")
                 .eq("user_id", user_id)
+                .order("updated_at", desc=True)
                 .execute()
             )
             return response.data
