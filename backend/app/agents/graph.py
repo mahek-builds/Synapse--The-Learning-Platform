@@ -31,7 +31,7 @@ builder.add_edge(START, "planner")
 
 
 # Router Function
-def route(state: LearningState) -> str:
+def route(state: LearningState) -> list[str] | str:
     """
     Decide next node based on Planner output.
     """
@@ -45,13 +45,13 @@ def route(state: LearningState) -> str:
         return "quiz"
 
     if intent == "learn":
-        return "teacher"
+        return ["teacher", "research"]
 
     if intent == "review":
-        return "teacher"
+        return ["teacher", "research"]
 
     # Default
-    return "teacher"
+    return ["teacher", "research"]
 
 
 # Conditional Routing
@@ -60,6 +60,7 @@ builder.add_conditional_edges(
     route,
     {
         "teacher": "teacher",
+        "research": "research",
         "quiz": "quiz",
         "chat": "chat",
     },
