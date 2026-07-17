@@ -7,6 +7,9 @@ from app.prompts.quiz import QUIZ_PROMPT
 from app.prompts.evaluator import EVALUATOR_PROMPT
 from app.prompts.roadmap import ROADMAP_PROMPT
 from app.prompts.chat import CHAT_PROMPT
+import asyncio
+from langchain_community.tools import DuckDuckGoSearchRun
+
 
 from app.services.cohere_service import llm, llm_fast
 
@@ -60,15 +63,19 @@ async def teacher_node(state: LearningState):
 
 
 async def research_node(state: LearningState):
-
-    prompt = RESEARCH_PROMPT.format(
-        topic=state["topic"]
-    )
-
-    response = await llm.ainvoke(prompt)
-
-    state["resources"] = response.content
-
+    # 1. Initialize the free DuckDuckGo search tool
+    search = DuckDuckGoSearchRun()
+    
+    # 2. Run the search in a separate thread so it doesn't block FastAPI
+    # We search for the topic along with "tutorials resources" to get helpful links
+    query = f"Learn {state['topic']} tutorials and resources"
+    
+    try:
+        results = await asyncio.to_thread(search.run, query)
+        state["resources"] = results
+    except Exception as e:
+        # Fallback if search fails (e.g. rate limits or network issues)
+        state["resources"] = f"Here are some resources on {state['topic']}. (Search failed: {str(e)})"
     return state
 
 

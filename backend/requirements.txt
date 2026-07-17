@@ -16,4 +16,7 @@ langchain
 langchain-core
 langchain-cohere
 
+langchain-community
+duckduckgo-search
+
 websockets
