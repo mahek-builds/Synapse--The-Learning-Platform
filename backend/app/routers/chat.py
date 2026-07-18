@@ -3,12 +3,13 @@ import uuid
 import asyncio
 import json as json_lib
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.responses import StreamingResponse
 from app.schemas.chat import ChatRequest, ChatResponse
 from app.services.chat_service import chat_service
 from app.services.langgraph_service import Langgraph
 from app.agents.state import LearningState
+from app.core.dependencies import get_current_user
 
 
 router = APIRouter(
@@ -18,7 +19,13 @@ router = APIRouter(
 
 
 @router.post("/", response_model=ChatResponse)
-async def chat(request: ChatRequest):
+async def chat(request: ChatRequest, current_user: any = Depends(get_current_user)):
+    user_id_from_token = getattr(current_user, "id", None)
+    if not user_id_from_token or user_id_from_token != request.user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this resource"
+        )
 
     session_id = request.session_id or str(uuid.uuid4())
     initial_title = (request.message[:50] + "...") if len(request.message) > 50 else request.message
@@ -157,7 +164,13 @@ async def chat(request: ChatRequest):
 
 
 @router.get("/sessions/{user_id}")
-def get_sessions(user_id: str):
+def get_sessions(user_id: str, current_user: any = Depends(get_current_user)):
+    user_id_from_token = getattr(current_user, "id", None)
+    if not user_id_from_token or user_id_from_token != user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this resource"
+        )
 
     return chat_service.get_sessions(user_id)
 
@@ -176,11 +189,17 @@ def get_sessions(user_id: str):
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @router.post("/stream")
-async def chat_stream(request: ChatRequest):
+async def chat_stream(request: ChatRequest, current_user: any = Depends(get_current_user)):
     """
     SSE streaming version of /chat/.
     Returns results node-by-node instead of waiting for everything.
     """
+    user_id_from_token = getattr(current_user, "id", None)
+    if not user_id_from_token or user_id_from_token != request.user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this resource"
+        )
 
     session_id = request.session_id or str(uuid.uuid4())
     initial_title = (request.message[:50] + "...") if len(request.message) > 50 else request.message
@@ -332,6 +351,17 @@ async def chat_stream(request: ChatRequest):
 
 
 @router.get("/messages/{session_id}")
-def get_messages(session_id: str):
-
+def get_messages(session_id: str, current_user: any = Depends(get_current_user)):
+    session = chat_service.get_session(session_id)
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Session not found"
+        )
+    user_id_from_token = getattr(current_user, "id", None)
+    if session.get("user_id") != user_id_from_token:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this resource"
+        )
     return chat_service.get_messages(session_id)
