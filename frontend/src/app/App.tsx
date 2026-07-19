@@ -100,9 +100,20 @@ export default function App() {
     setActiveSessionId(null);
   };
 
-  const handleDeleteSession = (sessionId: string) => {
-    setSessions((current) => current.filter((session) => session.id !== sessionId));
-    if (activeSessionId === sessionId) setActiveSessionId(null);
+  const handleDeleteSession = async (sessionId: string) => {
+    try {
+      const response = await authFetch(`/chat/sessions/${sessionId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setSessions((current) => current.filter((session) => session.id !== sessionId));
+        if (activeSessionId === sessionId) setActiveSessionId(null);
+      } else {
+        console.error('Failed to permanently delete session');
+      }
+    } catch (error) {
+      console.error('Error permanently deleting session:', error);
+    }
   };
 
   const handleCloseFullPage = () => {

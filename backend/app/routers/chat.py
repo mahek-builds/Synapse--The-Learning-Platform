@@ -177,6 +177,24 @@ def get_sessions(user_id: str, current_user: any = Depends(get_current_user)):
     return chat_service.get_sessions(user_id)
 
 
+@router.delete("/sessions/{session_id}")
+def delete_session(session_id: str, current_user: any = Depends(get_current_user)):
+    session = chat_service.get_session(session_id)
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Session not found"
+        )
+    user_id_from_token = getattr(current_user, "id", None)
+    if not getattr(current_user, "is_mock", False) and session.get("user_id") != user_id_from_token:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this resource"
+        )
+
+    return chat_service.delete_session(session_id)
+
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # SSE STREAMING ENDPOINT
 # Instead of waiting for ALL nodes to finish, this sends results
