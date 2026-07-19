@@ -13,6 +13,7 @@ class LearningState(TypedDict):
     # Routing
     intent: str
     suggested_difficulty: int
+    needs_research: bool
 
     # Agent outputs
     response: str

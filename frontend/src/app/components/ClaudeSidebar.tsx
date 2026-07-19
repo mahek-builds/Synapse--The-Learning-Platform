@@ -14,6 +14,7 @@ export function ClaudeSidebar({
   activeSessionId,
   onSelectSession,
   onDeleteSession,
+  userProfile,
 }: {
   onNewChat: () => void;
   onProfileClick: () => void;
@@ -21,6 +22,7 @@ export function ClaudeSidebar({
   activeSessionId: string | null;
   onSelectSession: (sessionId: string) => void;
   onDeleteSession: (sessionId: string) => void;
+  userProfile: { name: string; email: string } | null;
 }) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
@@ -99,7 +101,7 @@ export function ClaudeSidebar({
 
       <div className="border-t border-black/10 p-3">
         <button onClick={onProfileClick} className="flex size-10 items-center justify-center rounded-full bg-gradient-to-br from-[#6366F1] to-[#EC4899] text-white">
-          <span className="text-sm font-semibold">H</span>
+          <span className="text-sm font-semibold">{userProfile?.name?.charAt(0).toUpperCase() || 'U'}</span>
         </button>
       </div>
     </div>

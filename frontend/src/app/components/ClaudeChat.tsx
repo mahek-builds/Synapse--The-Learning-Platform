@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Plus, Mic, Send, BookOpen, BarChart3, Brain, ExternalLink } from 'lucide-react';
+import { Plus, Mic, Send, BookOpen, BarChart3, Brain, ExternalLink, Square } from 'lucide-react';
+import { getStoredUserId, authFetch } from '../utils/api';
 
 interface Message {
   id: string;
@@ -20,24 +21,6 @@ interface ResultCard {
   url: string;
 }
 
-const getStoredUserId = () => {
-  if (typeof window === 'undefined') return '00000000-0000-0000-0000-000000000000';
-  let stored = window.localStorage.getItem('synapse_user_id');
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-  if (!stored || !uuidRegex.test(stored)) {
-    try {
-      stored = window.crypto.randomUUID();
-    } catch (e) {
-      stored = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-        const r = (Math.random() * 16) | 0;
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      });
-    }
-    window.localStorage.setItem('synapse_user_id', stored);
-  }
-  return stored;
-};
 
 function buildCards(
   hasExplanation: boolean,
@@ -86,6 +69,16 @@ export function ClaudeChat({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const skipNextFetchRef = useRef(false);
+  const sessionCreatedCalledRef = useRef(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const handleStopGenerating = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsLoading(false);
+  };
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -106,7 +99,7 @@ export function ClaudeChat({
     }
 
     let cancelled = false;
-    fetch(`/chat/messages/${sessionId}`)
+    authFetch(`/chat/messages/${sessionId}`)
       .then((response) => {
         if (!response.ok) throw new Error('Unable to load messages');
         return response.json();
@@ -126,7 +119,14 @@ export function ClaudeChat({
                 diagram: metadata.diagram,
                 questions: metadata.questions,
                 timestamp: new Date(message.created_at),
-                cards: buildCards(!!metadata.explanation, !!metadata.questions, topic, index),
+                cards: metadata.intent === 'chat'
+                  ? undefined
+                  : buildCards(
+                      !!metadata.explanation && metadata.explanation !== message.content,
+                      !!metadata.questions && metadata.questions !== "[]" && metadata.questions !== "null",
+                      topic,
+                      index
+                    ),
               };
             }),
           );
@@ -144,6 +144,8 @@ export function ClaudeChat({
   // Now:         fetch → read CHUNKS as they arrive → update UI progressively
   const handleSend = async () => {
     if (!input.trim()) return;
+    sessionCreatedCalledRef.current = false;
+    abortControllerRef.current = new AbortController();
 
     // 1. Add user message to chat (same as before)
     const userMessage: Message = {
@@ -173,7 +175,7 @@ export function ClaudeChat({
     try {
       // 3. Call /chat/stream instead of /chat/
       //    This returns SSE (Server-Sent Events) — data arrives in chunks
-      const response = await fetch('/chat/stream', {
+      const response = await authFetch('/chat/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -181,6 +183,7 @@ export function ClaudeChat({
           session_id: sessionId,
           message: currentInput,
         }),
+        signal: abortControllerRef.current?.signal,
       });
 
       if (!response.ok) {
@@ -199,6 +202,8 @@ export function ClaudeChat({
       let explanation = '';
       let questions = '';
       let latestContent = '';
+      let intent = '';
+      let resources = '';
 
       // 5. Read chunks in a loop until the stream ends
       while (true) {
@@ -224,18 +229,27 @@ export function ClaudeChat({
             const chunk = JSON.parse(payload);
 
             // Track session ID and topic
-            if (chunk.session_id) newSessionId = chunk.session_id;
+            if (chunk.session_id) {
+              newSessionId = chunk.session_id;
+              if (!sessionId && !sessionCreatedCalledRef.current) {
+                sessionCreatedCalledRef.current = true;
+                skipNextFetchRef.current = true;
+                onSessionCreated(newSessionId!);
+              }
+            }
+            if (chunk.intent) intent = chunk.intent;
             if (chunk.topic) topic = chunk.topic;
 
             // Accumulate content from each node
             if (chunk.explanation) explanation = chunk.explanation;
             if (chunk.questions) questions = chunk.questions;
+            if (chunk.resources) resources = chunk.resources;
 
             // Pick the main display content
-            const content = chunk.response || chunk.explanation || chunk.feedback || '';
+            const content = chunk.response || chunk.explanation || chunk.feedback || chunk.resources || '';
 
-            if (content) {
-              latestContent = content;
+            if (content || chunk.explanation || chunk.questions || chunk.resources) {
+              if (content) latestContent = content;
 
               // 7. UPDATE the existing AI message (don't add a new one!)
               //    This is what makes the UI update progressively
@@ -245,9 +259,16 @@ export function ClaudeChat({
                     ? {
                         ...m,
                         content: latestContent,
-                        explanation,
-                        questions,
-                        cards: buildCards(!!explanation, !!questions, topic, aiMessageId),
+                        explanation: explanation || m.explanation,
+                        questions: questions || m.questions,
+                        cards: intent === 'chat'
+                          ? undefined
+                          : buildCards(
+                              !!(explanation || m.explanation),
+                              !!(questions || m.questions) && (questions || m.questions) !== "[]",
+                              topic,
+                              aiMessageId
+                            ),
                       }
                     : m
                 )
@@ -260,15 +281,29 @@ export function ClaudeChat({
       }
 
       // 8. Stream finished — handle session creation (same as before)
-      if (newSessionId && !sessionId) {
+      if (newSessionId && !sessionId && !sessionCreatedCalledRef.current) {
+        sessionCreatedCalledRef.current = true;
         skipNextFetchRef.current = true;
-        onSessionCreated(newSessionId);
+        onSessionCreated(newSessionId!);
       }
       // Small delay to let the backend finish saving the session
       // title/topic (it runs after the [DONE] SSE signal)
       await new Promise((resolve) => setTimeout(resolve, 600));
       onSessionUpdated();
-    } catch (error) {
+
+      if (questions && questions !== "[]" && questions !== "null") {
+        // Auto-open the quiz directly after generation completes
+        onCardClick('quiz', {
+          title: `Quiz: ${topic}`,
+          url: '#',
+          content: questions,
+        });
+      }
+    } catch (error: any) {
+      if (error.name === 'AbortError') {
+        // User clicked stop, keep what has been generated so far
+        return;
+      }
       // If streaming fails, show error in the AI message
       setMessages((prev) =>
         prev.map((m) =>
@@ -280,6 +315,7 @@ export function ClaudeChat({
       console.error(error);
     } finally {
       setIsLoading(false);
+      abortControllerRef.current = null;
     }
   };
 
@@ -444,13 +480,23 @@ export function ClaudeChat({
                 <button className="flex size-9 items-center justify-center rounded-lg text-[#6B6B6B] transition-colors hover:bg-[#F5F3EF]">
                   <Mic className="size-4" />
                 </button>
-                <button
-                  onClick={handleSend}
-                  disabled={!input.trim() || isLoading}
-                  className="flex size-9 items-center justify-center rounded-lg bg-gradient-to-r from-[#6366F1] to-[#EC4899] text-white transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <Send className="size-4" />
-                </button>
+                {isLoading ? (
+                  <button
+                    onClick={handleStopGenerating}
+                    className="flex size-9 items-center justify-center rounded-lg bg-gradient-to-r from-[#6366F1] to-[#EC4899] text-white transition-all hover:opacity-90"
+                    title="Stop generating"
+                  >
+                    <Square className="size-3.5 fill-white text-white" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleSend}
+                    disabled={!input.trim()}
+                    className="flex size-9 items-center justify-center rounded-lg bg-gradient-to-r from-[#6366F1] to-[#EC4899] text-white transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <Send className="size-4" />
+                  </button>
+                )}
               </div>
             </div>
           </div>

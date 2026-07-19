@@ -5,7 +5,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 
 const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
-export function RegisterPage({ onRegister }: { onRegister: () => void }) {
+export function RegisterPage({ onRegister }: { onRegister: (name: string, email: string) => void }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,7 +25,7 @@ export function RegisterPage({ onRegister }: { onRegister: () => void }) {
       return;
     }
 
-    onRegister();
+    onRegister(name, email);
   };
 
   return (

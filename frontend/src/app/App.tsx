@@ -8,6 +8,7 @@ import { FullPageExplanation } from './components/FullPageExplanation';
 import { FullPageDiagram } from './components/FullPageDiagram';
 import { LoginPage } from './components/LoginPage';
 import { RegisterPage } from './components/RegisterPage';
+import { getStoredUserId, authFetch } from './utils/api';
 
 interface ApiSession {
   id: string;
@@ -17,14 +18,6 @@ interface ApiSession {
   updated_at?: string;
 }
 
-function getStoredUserId() {
-  let userId = window.localStorage.getItem('synapse_user_id');
-  if (!userId) {
-    userId = window.crypto.randomUUID();
-    window.localStorage.setItem('synapse_user_id', userId);
-  }
-  return userId;
-}
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -35,10 +28,15 @@ export default function App() {
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [activeCardData, setActiveCardData] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<{ name: string; email: string } | null>(() => {
+    const name = window.localStorage.getItem('synapse_user_name');
+    const email = window.localStorage.getItem('synapse_user_email');
+    return name && email ? { name, email } : null;
+  });
 
   const loadSessions = useCallback(async () => {
     try {
-      const response = await fetch(`/chat/sessions/${getStoredUserId()}`);
+      const response = await authFetch(`/chat/sessions/${getStoredUserId()}`);
       if (!response.ok) throw new Error('Unable to load conversations');
       const data: ApiSession[] = await response.json();
       setSessions(data.map((session) => ({
@@ -51,10 +49,44 @@ export default function App() {
     }
   }, []);
 
+  const loadProfile = useCallback(async () => {
+    try {
+      const response = await authFetch(`/users/${getStoredUserId()}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.email) {
+          setUserProfile({
+            name: data.name || 'Synapse User',
+            email: data.email || 'user@synapse.local'
+          });
+          window.localStorage.setItem('synapse_user_name', data.name || 'Synapse User');
+          window.localStorage.setItem('synapse_user_email', data.email || 'user@synapse.local');
+        }
+      }
+    } catch (error) {
+      console.error('Unable to load user profile:', error);
+    }
+  }, []);
+
+  const updateProfileOnBackend = async (name: string, email: string) => {
+    try {
+      await authFetch(`/users/${getStoredUserId()}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email }),
+      });
+    } catch (error) {
+      console.error('Unable to update profile on backend:', error);
+    }
+  };
+
   useEffect(() => {
     window.localStorage.setItem('synapse_authenticated', String(isAuthenticated));
-    if (isAuthenticated) loadSessions();
-  }, [isAuthenticated, loadSessions]);
+    if (isAuthenticated) {
+      loadSessions();
+      loadProfile();
+    }
+  }, [isAuthenticated, loadSessions, loadProfile]);
 
   const handleCardClick = (type: string, data: any) => {
     setActiveCardData(data);
@@ -78,6 +110,35 @@ export default function App() {
     setActiveCardData(null);
   };
 
+  const handleLogin = (email: string) => {
+    const defaultName = email.split('@')[0];
+    const capitalizedName = defaultName.charAt(0).toUpperCase() + defaultName.slice(1);
+    window.localStorage.setItem('synapse_user_name', capitalizedName);
+    window.localStorage.setItem('synapse_user_email', email);
+    setUserProfile({ name: capitalizedName, email });
+    setIsAuthenticated(true);
+    updateProfileOnBackend(capitalizedName, email);
+  };
+
+  const handleRegister = (name: string, email: string) => {
+    window.localStorage.setItem('synapse_user_name', name);
+    window.localStorage.setItem('synapse_user_email', email);
+    setUserProfile({ name, email });
+    setIsAuthenticated(true);
+    updateProfileOnBackend(name, email);
+  };
+
+  const handleLogout = () => {
+    window.localStorage.removeItem('synapse_authenticated');
+    window.localStorage.removeItem('synapse_user_name');
+    window.localStorage.removeItem('synapse_user_email');
+    window.localStorage.removeItem('synapse_user_id');
+    setUserProfile(null);
+    setIsAuthenticated(false);
+    setCurrentView('chat');
+    setActiveSessionId(null);
+  };
+
   const renderAuthenticatedApp = () => {
     if (currentView === 'quiz') return <FullPageQuiz onClose={handleCloseFullPage} data={activeCardData} />;
     if (currentView === 'explanation') return <FullPageExplanation onClose={handleCloseFullPage} data={activeCardData} />;
@@ -92,6 +153,7 @@ export default function App() {
           activeSessionId={activeSessionId}
           onSelectSession={setActiveSessionId}
           onDeleteSession={handleDeleteSession}
+          userProfile={userProfile}
         />
         <div className="flex-1">
           <ClaudeChat
@@ -104,7 +166,13 @@ export default function App() {
             onSessionUpdated={loadSessions}
           />
         </div>
-        {showProfile && <ProfileModal onClose={() => setShowProfile(false)} />}
+        {showProfile && (
+          <ProfileModal
+            onClose={() => setShowProfile(false)}
+            userProfile={userProfile}
+            onLogout={handleLogout}
+          />
+        )}
       </div>
     );
   };
@@ -112,8 +180,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage onLogin={() => setIsAuthenticated(true)} />} />
-        <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage onRegister={() => setIsAuthenticated(true)} />} />
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage onLogin={handleLogin} />} />
+        <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage onRegister={handleRegister} />} />
         <Route path="/dashboard" element={isAuthenticated ? renderAuthenticatedApp() : <Navigate to="/login" replace />} />
         <Route path="/" element={isAuthenticated ? renderAuthenticatedApp() : <Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />} />

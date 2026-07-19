@@ -22,4 +22,8 @@ Topic:
 Skill Level:
 
 {skill_level}
+
+Additional Context / Search Results (use this to explain up-to-date features or accurate details, especially if the topic is new or beyond your knowledge cutoff):
+
+{search_context}
 """

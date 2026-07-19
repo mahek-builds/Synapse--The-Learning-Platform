@@ -37,22 +37,28 @@ async def planner_node(state: LearningState):
             "intent": "chat",
             "topic": "",
             "skill_level": "beginner",
-            "suggested_difficulty": 0
+            "suggested_difficulty": 0,
+            "needs_research": False
         }
 
     state["intent"] = data.get("intent", "chat")
     state["topic"] = data.get("topic", "")
     state["skill_level"] = data.get("skill_level", "beginner")
     state["suggested_difficulty"] = data.get("suggested_difficulty", 0)
+    state["needs_research"] = data.get("needs_research", False)
 
     return state
 
 
 async def teacher_node(state: LearningState):
 
+    resources = state.get("resources", "")
+    search_context = json.dumps(resources) if isinstance(resources, (list, dict)) else str(resources)
+
     prompt = TEACHER_PROMPT.format(
         topic=state["topic"],
-        skill_level=state["skill_level"]
+        skill_level=state["skill_level"],
+        search_context=search_context
     )
 
     response = await llm.ainvoke(prompt)

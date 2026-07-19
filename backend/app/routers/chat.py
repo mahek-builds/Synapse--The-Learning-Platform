@@ -65,6 +65,7 @@ async def chat(request: ChatRequest, current_user: any = Depends(get_current_use
         learning_history=[],
         intent="",
         suggested_difficulty=0,
+        needs_research=False,
         explanation="",
         code_examples="",
         diagram="",
@@ -101,6 +102,7 @@ async def chat(request: ChatRequest, current_user: any = Depends(get_current_use
             ai_response.get("response")
             or ai_response.get("explanation")
             or ai_response.get("feedback")
+            or ai_response.get("resources")
             or str(ai_response)
         )
         topic = ai_response.get("topic") or ""
@@ -237,8 +239,8 @@ async def chat_stream(request: ChatRequest, current_user: any = Depends(get_curr
         user_id=request.user_id,
         skill_level="beginner", topic="",
         learning_history=[], intent="",
-        suggested_difficulty=0, explanation="",
-        code_examples="", diagram="",
+        suggested_difficulty=0, needs_research=False,
+        explanation="", code_examples="", diagram="",
         questions=[], resources=[],
         feedback="", xp_earned=0,
         suggested_path=[], response_chunks=[]
@@ -299,6 +301,7 @@ async def chat_stream(request: ChatRequest, current_user: any = Depends(get_curr
             accumulated.get("response")
             or accumulated.get("explanation")
             or accumulated.get("feedback")
+            or accumulated.get("resources")
             or ""
         )
 
@@ -359,7 +362,7 @@ def get_messages(session_id: str, current_user: any = Depends(get_current_user))
             detail="Session not found"
         )
     user_id_from_token = getattr(current_user, "id", None)
-    if session.get("user_id") != user_id_from_token:
+    if not getattr(current_user, "is_mock", False) and session.get("user_id") != user_id_from_token:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to access this resource"

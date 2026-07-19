@@ -6,7 +6,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 
 const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
-export function LoginPage({ onLogin }: { onLogin: () => void }) {
+export function LoginPage({ onLogin }: { onLogin: (email: string) => void }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
@@ -19,7 +19,7 @@ export function LoginPage({ onLogin }: { onLogin: () => void }) {
       return;
     }
 
-    onLogin();
+    onLogin(email);
   };
 
   return (
@@ -117,7 +117,17 @@ export function LoginPage({ onLogin }: { onLogin: () => void }) {
                 }
 
                 console.log('Google login success', credentialResponse);
-                onLogin();
+                const token = credentialResponse.credential;
+                let email = "google-user@example.com";
+                if (token) {
+                  try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    if (payload.email) email = payload.email;
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }
+                onLogin(email);
               }}
               onError={() => {
                 console.log('Google login failed');

@@ -37,6 +37,7 @@ def route(state: LearningState) -> list[str] | str:
     """
 
     intent = state.get("intent", "").lower()
+    needs_research = state.get("needs_research", False)
 
     if intent == "chat":
         return "chat"
@@ -44,14 +45,19 @@ def route(state: LearningState) -> list[str] | str:
     if intent == "quiz":
         return "quiz"
 
-    if intent == "learn":
-        return ["teacher", "research"]
+    if intent == "teacher":
+        if needs_research:
+            return "research"
+        return "teacher"
 
-    if intent == "review":
-        return ["teacher", "research"]
+    if intent == "research":
+        return "research"
 
-    # Default
-    return ["teacher", "research"]
+    if intent == "roadmap":
+        return "roadmap"
+
+    # Default fallbacks
+    return "chat"
 
 
 # Conditional Routing
@@ -63,6 +69,7 @@ builder.add_conditional_edges(
         "research": "research",
         "quiz": "quiz",
         "chat": "chat",
+        "roadmap": "roadmap",
     },
 )
 
@@ -71,9 +78,24 @@ builder.add_conditional_edges(
 builder.add_edge("chat", END)
 
 
-# Learning Flow (PARALLELIZED — teacher and research run simultaneously)
-builder.add_edge("teacher", "evaluator")
-builder.add_edge("research", "evaluator")
+# Learning Flow (selective, conditional routing after research)
+builder.add_edge("teacher", "quiz")
+
+def route_after_research(state: LearningState) -> str:
+    intent = state.get("intent", "").lower()
+    if intent == "teacher":
+        return "teacher"
+    return "quiz"
+
+# Conditional routing after research
+builder.add_conditional_edges(
+    "research",
+    route_after_research,
+    {
+        "teacher": "teacher",
+        "quiz": "quiz"
+    }
+)
 
 
 # Quiz Flow
