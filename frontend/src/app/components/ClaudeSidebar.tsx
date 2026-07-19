@@ -87,7 +87,7 @@ export function ClaudeSidebar({
                       <div className="absolute right-2 top-full z-20 mt-1 w-40 rounded-lg border border-black/10 bg-white py-1 shadow-lg">
                         <button onClick={() => handleDelete(session.id)} className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-red-600 transition-colors hover:bg-red-50">
                           <Trash2 className="size-4" />
-                          <span>Hide</span>
+                          <span>Delete</span>
                         </button>
                       </div>
                     </>
