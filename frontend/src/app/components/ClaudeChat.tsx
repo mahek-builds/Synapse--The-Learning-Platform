@@ -295,14 +295,7 @@ export function ClaudeChat({
       await new Promise((resolve) => setTimeout(resolve, 600));
       onSessionUpdated();
 
-      if (questions && questions !== "[]" && questions !== "null") {
-        // Auto-open the quiz directly after generation completes
-        onCardClick('quiz', {
-          title: `Quiz: ${topic}`,
-          url: '#',
-          content: questions,
-        });
-      }
+
     } catch (error: any) {
       if (error.name === 'AbortError') {
         // User clicked stop, keep what has been generated so far
