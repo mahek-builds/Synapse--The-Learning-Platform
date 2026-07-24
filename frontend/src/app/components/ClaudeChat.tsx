@@ -201,6 +201,8 @@ export function ClaudeChat({
       let topic = 'Topic';
       let explanation = '';
       let questions = '';
+      let feedback = '';
+      let chatResponse = '';
       let latestContent = '';
       let intent = '';
       let resources = '';
@@ -244,12 +246,14 @@ export function ClaudeChat({
             if (chunk.explanation) explanation = chunk.explanation;
             if (chunk.questions) questions = chunk.questions;
             if (chunk.resources) resources = chunk.resources;
+            if (chunk.feedback) feedback = chunk.feedback;
+            if (chunk.response) chatResponse = chunk.response;
 
-            // Pick the main display content
-            const content = chunk.response || chunk.explanation || chunk.feedback || chunk.resources || '';
+            // Pick the main display content from accumulated values
+            const displayContent = chatResponse || explanation || feedback || resources || '';
 
-            if (content || chunk.explanation || chunk.questions || chunk.resources) {
-              if (content) latestContent = content;
+            if (displayContent || chunk.explanation || chunk.questions || chunk.resources) {
+              if (displayContent) latestContent = displayContent;
 
               // 7. UPDATE the existing AI message (don't add a new one!)
               //    This is what makes the UI update progressively

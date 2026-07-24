@@ -99,11 +99,10 @@ builder.add_conditional_edges(
 
 
 # Quiz Flow
-builder.add_edge("quiz", "evaluator")
+builder.add_edge("quiz", "roadmap")
 
 
 # Common Flow
-builder.add_edge("evaluator", "roadmap")
 builder.add_edge("roadmap", END)
 
 
