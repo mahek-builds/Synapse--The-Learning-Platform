@@ -52,7 +52,18 @@ export function authFetch(input: RequestInfo | URL, init?: RequestInit): Promise
     headers.set('Authorization', `Bearer ${token}`);
   }
 
-  return fetch(input, {
+  let finalInput = input;
+  const apiBaseUrl = import.meta.env.VITE_API_URL;
+  if (apiBaseUrl) {
+    const cleanBaseUrl = apiBaseUrl.replace(/\/$/, '');
+    if (typeof input === 'string' && input.startsWith('/')) {
+      finalInput = `${cleanBaseUrl}${input}`;
+    } else if (input instanceof URL && input.pathname.startsWith('/')) {
+      finalInput = new URL(input.pathname + input.search + input.hash, cleanBaseUrl);
+    }
+  }
+
+  return fetch(finalInput, {
     ...init,
     headers,
   });
