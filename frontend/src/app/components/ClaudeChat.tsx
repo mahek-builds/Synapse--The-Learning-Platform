@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Plus, Mic, Send, BookOpen, BarChart3, Brain, ExternalLink, Square } from 'lucide-react';
+import { Mic, Send, BookOpen, BarChart3, Brain, ExternalLink, Square } from 'lucide-react';
 import { getStoredUserId, authFetch } from '../utils/api';
 
 interface Message {
@@ -451,14 +451,6 @@ export function ClaudeChat({
         <div className="mx-auto w-[680px]">
           <div className="overflow-hidden rounded-xl border border-black/10 bg-white shadow-lg">
             <div className="flex items-center gap-3 px-4 py-3">
-              <input ref={fileInputRef} type="file" multiple className="hidden" accept="image/*,.pdf,.doc,.docx,.txt" />
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="flex size-9 shrink-0 items-center justify-center rounded-lg text-[#6B6B6B] transition-colors hover:bg-[#F5F3EF]"
-              >
-                <Plus className="size-5" />
-              </button>
-
               <input
                 type="text"
                 value={input}

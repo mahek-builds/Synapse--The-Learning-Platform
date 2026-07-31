@@ -1,3 +1,28 @@
+export function getDeterministicUUID(str: string): string {
+  const normalized = str.trim().toLowerCase();
+  let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+  for (let i = 0, ch; i < normalized.length; i++) {
+    ch = normalized.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  
+  const bytes: number[] = [];
+  let seed = (h1 ^ h2) >>> 0;
+  for (let i = 0; i < 16; i++) {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    bytes.push(seed & 0xFF);
+  }
+  
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  
+  const hex = bytes.map(b => b.toString(16).padStart(2, '0')).join('');
+  return `${hex.substring(0, 8)}-${hex.substring(8, 12)}-${hex.substring(12, 16)}-${hex.substring(16, 20)}-${hex.substring(20, 32)}`;
+}
+
 export function getStoredUserId(): string {
   // 1. Try to extract the user ID from the standard Supabase Auth session token
   for (let i = 0; i < window.localStorage.length; i++) {

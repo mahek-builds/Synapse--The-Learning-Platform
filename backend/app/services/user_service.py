@@ -38,15 +38,46 @@ class UserService:
 
         update_payload = data.dict(exclude_none=True)
 
-        response = (
-            supabase
-            .table("app_users")
-            .update(update_payload)
-            .eq("id", user_id)
-            .execute()
-        )
-
-        return response.data
+        try:
+            existing = (
+                supabase
+                .table("app_users")
+                .select("id")
+                .eq("id", user_id)
+                .execute()
+            )
+            if existing.data:
+                response = (
+                    supabase
+                    .table("app_users")
+                    .update(update_payload)
+                    .eq("id", user_id)
+                    .execute()
+                )
+            else:
+                insert_payload = {
+                    "id": user_id,
+                    **update_payload
+                }
+                response = (
+                    supabase
+                    .table("app_users")
+                    .insert(insert_payload)
+                    .execute()
+                )
+            return response.data
+        except Exception:
+            try:
+                response = (
+                    supabase
+                    .table("app_users")
+                    .update(update_payload)
+                    .eq("id", user_id)
+                    .execute()
+                )
+                return response.data
+            except Exception:
+                return None
 
     def get_stats(self, user_id: str):
 

@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Send, Paperclip, X, FileText, File, Image as ImageIcon } from 'lucide-react';
+import { Send, FileText, File } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -239,58 +239,7 @@ export function MainChat({ onQuizStart }: { onQuizStart: (topic: string) => void
       {/* Input Area */}
       <div className="border-t border-slate-200 bg-white p-4">
         <div className="mx-auto max-w-3xl">
-          {/* File Attachments Preview */}
-          {attachments.length > 0 && (
-            <div className="mb-3 flex flex-wrap gap-2">
-              {attachments.map((file) => (
-                <div
-                  key={file.id}
-                  className="group relative overflow-hidden rounded-lg border border-slate-200 bg-slate-50"
-                >
-                  {file.type.startsWith('image/') ? (
-                    <div className="relative">
-                      <img src={file.url} alt={file.name} className="h-20 w-28 object-cover" />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100" />
-                    </div>
-                  ) : (
-                    <div className="flex h-20 w-28 flex-col items-center justify-center p-2">
-                      {file.type === 'application/pdf' ? (
-                        <FileText className="mb-1 size-6 text-red-500" />
-                      ) : (
-                        <File className="mb-1 size-6 text-slate-500" />
-                      )}
-                      <p className="truncate text-xs text-slate-600" title={file.name}>
-                        {file.name.slice(0, 12)}
-                      </p>
-                    </div>
-                  )}
-                  <button
-                    onClick={() => removeAttachment(file.id)}
-                    className="absolute right-1 top-1 flex size-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity hover:bg-red-600 group-hover:opacity-100"
-                  >
-                    <X className="size-3" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
           <div className="flex items-end gap-3">
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              onChange={handleFileSelect}
-              className="hidden"
-              accept="image/*,.pdf,.doc,.docx,.txt"
-            />
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="flex size-10 shrink-0 items-center justify-center rounded-lg text-slate-600 transition-colors hover:bg-slate-100"
-            >
-              <Paperclip className="size-5" />
-            </button>
-
             <div className="flex-1 rounded-2xl border border-slate-300 bg-white shadow-sm focus-within:border-slate-400">
               <textarea
                 value={input}

@@ -8,7 +8,7 @@ import { FullPageExplanation } from './components/FullPageExplanation';
 import { FullPageDiagram } from './components/FullPageDiagram';
 import { LoginPage } from './components/LoginPage';
 import { RegisterPage } from './components/RegisterPage';
-import { getStoredUserId, authFetch } from './utils/api';
+import { getStoredUserId, authFetch, getDeterministicUUID } from './utils/api';
 
 interface ApiSession {
   id: string;
@@ -124,6 +124,11 @@ export default function App() {
   const handleLogin = (email: string) => {
     const defaultName = email.split('@')[0];
     const capitalizedName = defaultName.charAt(0).toUpperCase() + defaultName.slice(1);
+    
+    // Generate and store deterministic user ID from email
+    const userId = getDeterministicUUID(email);
+    window.localStorage.setItem('synapse_user_id', userId);
+
     window.localStorage.setItem('synapse_user_name', capitalizedName);
     window.localStorage.setItem('synapse_user_email', email);
     setUserProfile({ name: capitalizedName, email });
@@ -132,6 +137,10 @@ export default function App() {
   };
 
   const handleRegister = (name: string, email: string) => {
+    // Generate and store deterministic user ID from email
+    const userId = getDeterministicUUID(email);
+    window.localStorage.setItem('synapse_user_id', userId);
+
     window.localStorage.setItem('synapse_user_name', name);
     window.localStorage.setItem('synapse_user_email', email);
     setUserProfile({ name, email });

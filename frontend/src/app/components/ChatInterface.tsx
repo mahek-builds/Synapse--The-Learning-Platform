@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Send, Sparkles, Loader2, BookOpen, Image as ImageIcon, Paperclip, X, FileText, File } from 'lucide-react';
+import { Send, Sparkles, Loader2, BookOpen, Image as ImageIcon, FileText, File } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -215,44 +215,6 @@ export function ChatInterface() {
 
       {/* Input */}
       <div className="border-t border-slate-200 bg-white p-6">
-        <div className="mx-auto max-w-4xl">
-          {/* File Attachments Preview */}
-          {attachments.length > 0 && (
-            <div className="mb-4 flex flex-wrap gap-2">
-              {attachments.map((file) => (
-                <div
-                  key={file.id}
-                  className="group relative overflow-hidden rounded-lg border border-slate-200 bg-slate-50"
-                >
-                  {file.type.startsWith('image/') ? (
-                    <div className="relative">
-                      <img src={file.url} alt={file.name} className="h-24 w-32 object-cover" />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100" />
-                    </div>
-                  ) : (
-                    <div className="flex h-24 w-32 flex-col items-center justify-center p-2">
-                      {file.type === 'application/pdf' ? (
-                        <FileText className="mb-1 size-8 text-red-500" />
-                      ) : (
-                        <File className="mb-1 size-8 text-slate-500" />
-                      )}
-                      <p className="truncate text-xs text-slate-600" title={file.name}>
-                        {file.name}
-                      </p>
-                      <p className="text-xs text-slate-400">{formatFileSize(file.size)}</p>
-                    </div>
-                  )}
-                  <button
-                    onClick={() => removeAttachment(file.id)}
-                    className="absolute right-1 top-1 flex size-6 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity hover:bg-red-600 group-hover:opacity-100"
-                  >
-                    <X className="size-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
           <div className="flex items-end gap-3">
             <div className="flex-1 rounded-xl border border-slate-300 bg-white shadow-sm focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-200">
               <textarea
@@ -268,26 +230,6 @@ export function ChatInterface() {
                 className="w-full resize-none border-0 bg-transparent px-4 py-3 text-sm outline-none"
                 rows={3}
               />
-              <div className="flex items-center gap-2 border-t border-slate-200 px-4 py-2">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  multiple
-                  onChange={handleFileSelect}
-                  className="hidden"
-                  accept="image/*,.pdf,.doc,.docx,.txt"
-                />
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm text-slate-600 transition-colors hover:bg-slate-100"
-                >
-                  <Paperclip className="size-4" />
-                  <span>Attach files</span>
-                </button>
-                <span className="text-xs text-slate-400">
-                  {attachments.length > 0 && `${attachments.length} file${attachments.length > 1 ? 's' : ''} attached`}
-                </span>
-              </div>
             </div>
             <button
               onClick={handleSend}
@@ -302,6 +244,5 @@ export function ChatInterface() {
           </p>
         </div>
       </div>
-    </div>
   );
 }

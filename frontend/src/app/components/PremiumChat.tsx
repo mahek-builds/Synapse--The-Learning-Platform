@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Send, Paperclip, Mic, Copy, Check } from 'lucide-react';
+import { Send, Mic, Copy, Check } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -21,7 +21,6 @@ export function PremiumChat({
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -240,22 +239,7 @@ export function PremiumChat({
       {/* Input Area */}
       <div className="border-t border-white/10 bg-[#0F172A] p-4">
         <div className="mx-auto max-w-4xl">
-          <div className="flex items-end gap-3">
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              className="hidden"
-              accept="image/*,.pdf,.doc,.docx,.txt"
-            />
-
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-[#1E293B] text-slate-400 transition-colors hover:bg-[#334155] hover:text-white"
-            >
-              <Paperclip className="size-5" />
-            </button>
-
+           <div className="flex items-end gap-3">
             <div className="flex-1 rounded-2xl border border-white/20 bg-[#1E293B] shadow-xl focus-within:border-[#4F46E5]">
               <textarea
                 value={input}
