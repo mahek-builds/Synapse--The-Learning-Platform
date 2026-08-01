@@ -43,12 +43,12 @@ def route(state: LearningState) -> list[str] | str:
         return "chat"
 
     if intent == "quiz":
-        return "quiz"
+        return ["quiz", "roadmap"]
 
     if intent == "teacher":
         if needs_research:
             return "research"
-        return "teacher"
+        return ["teacher", "quiz", "roadmap"]
 
     if intent == "research":
         return "research"
@@ -78,14 +78,19 @@ builder.add_conditional_edges(
 builder.add_edge("chat", END)
 
 
-# Learning Flow (selective, conditional routing after research)
-builder.add_edge("teacher", "quiz")
+# Parallel Branch Endpoints transition to END (Fan-In)
+builder.add_edge("teacher", END)
+builder.add_edge("quiz", END)
+builder.add_edge("roadmap", END)
 
-def route_after_research(state: LearningState) -> str:
+
+def route_after_research(state: LearningState) -> list[str] | str:
     intent = state.get("intent", "").lower()
     if intent == "teacher":
-        return "teacher"
-    return "quiz"
+        return ["teacher", "quiz", "roadmap"]
+    if intent == "quiz":
+        return ["quiz", "roadmap"]
+    return ["quiz", "roadmap"]
 
 # Conditional routing after research
 builder.add_conditional_edges(
@@ -93,17 +98,10 @@ builder.add_conditional_edges(
     route_after_research,
     {
         "teacher": "teacher",
-        "quiz": "quiz"
+        "quiz": "quiz",
+        "roadmap": "roadmap"
     }
 )
-
-
-# Quiz Flow
-builder.add_edge("quiz", "roadmap")
-
-
-# Common Flow
-builder.add_edge("roadmap", END)
 
 
 # Compile Graph
