@@ -12,7 +12,7 @@ llm = ChatCohere(
 # Fast model for planner (only outputs small JSON)
 llm_fast = ChatCohere(
     cohere_api_key=settings.COHERE_API_KEY,
-    model="command-r",
+    model="command-r-08-2024",
     temperature=0.1,
     max_tokens=256,
 )
