@@ -69,14 +69,13 @@ async def teacher_node(state: LearningState):
 
 
 async def research_node(state: LearningState):
-    # 1. Initialize the free DuckDuckGo search tool
-    search = DuckDuckGoSearchRun()
-    
-    # 2. Run the search in a separate thread so it doesn't block FastAPI
     # We search for the topic along with "tutorials resources" to get helpful links
     query = f"Learn {state['topic']} tutorials and resources"
     
     try:
+        # 1. Initialize the free DuckDuckGo search tool
+        search = DuckDuckGoSearchRun()
+        # 2. Run the search in a separate thread so it doesn't block FastAPI
         results = await asyncio.to_thread(search.run, query)
         state["resources"] = results
     except Exception as e:
