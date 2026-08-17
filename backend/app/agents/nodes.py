@@ -41,13 +41,13 @@ async def planner_node(state: LearningState):
             "needs_research": False
         }
 
-    state["intent"] = data.get("intent", "chat")
-    state["topic"] = data.get("topic", "")
-    state["skill_level"] = data.get("skill_level", "beginner")
-    state["suggested_difficulty"] = data.get("suggested_difficulty", 0)
-    state["needs_research"] = data.get("needs_research", False)
-
-    return state
+    return {
+        "intent": data.get("intent", "chat"),
+        "topic": data.get("topic", ""),
+        "skill_level": data.get("skill_level", "beginner"),
+        "suggested_difficulty": data.get("suggested_difficulty", 0),
+        "needs_research": data.get("needs_research", False)
+    }
 
 
 async def teacher_node(state: LearningState):
@@ -63,9 +63,7 @@ async def teacher_node(state: LearningState):
 
     response = await llm.ainvoke(prompt)
 
-    state["explanation"] = response.content
-
-    return state
+    return {"explanation": response.content}
 
 
 async def research_node(state: LearningState):
@@ -77,11 +75,11 @@ async def research_node(state: LearningState):
         search = DuckDuckGoSearchRun()
         # 2. Run the search in a separate thread so it doesn't block FastAPI
         results = await asyncio.to_thread(search.run, query)
-        state["resources"] = results
+        resources = results
     except Exception as e:
         # Fallback if search fails (e.g. rate limits or network issues)
-        state["resources"] = f"Here are some resources on {state['topic']}. (Search failed: {str(e)})"
-    return state
+        resources = f"Here are some resources on {state['topic']}. (Search failed: {str(e)})"
+    return {"resources": resources}
 
 
 async def quiz_node(state: LearningState):
@@ -93,9 +91,7 @@ async def quiz_node(state: LearningState):
 
     response = await llm.ainvoke(prompt)
 
-    state["questions"] = response.content
-
-    return state
+    return {"questions": response.content}
 
 
 async def evaluator_node(state: LearningState):
@@ -106,9 +102,7 @@ async def evaluator_node(state: LearningState):
 
     response = await llm.ainvoke(prompt)
 
-    state["feedback"] = response.content
-
-    return state
+    return {"feedback": response.content}
 
 
 async def roadmap_node(state: LearningState):
@@ -120,9 +114,7 @@ async def roadmap_node(state: LearningState):
 
     response = await llm.ainvoke(prompt)
 
-    state["suggested_path"] = response.content
-
-    return state
+    return {"suggested_path": response.content}
 
 
 async def chat_node(state: LearningState):
@@ -133,7 +125,7 @@ async def chat_node(state: LearningState):
 
     response = await llm.ainvoke(prompt)
 
-    state["response"] = response.content
-    state["explanation"] = response.content
-
-    return state
+    return {
+        "response": response.content,
+        "explanation": response.content
+    }
