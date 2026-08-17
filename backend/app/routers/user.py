@@ -23,7 +23,7 @@ def get_profile(user_id: str, current_user: any = Depends(get_current_user)):
 @router.put("/{user_id}")
 def update_profile(
     user_id: str,
-    data: UserUpdate,
+      data: UserUpdate,
     current_user: any = Depends(get_current_user)
 ):
     user_id_from_token = getattr(current_user, "id", None)
@@ -43,4 +43,4 @@ def get_stats(user_id: str, current_user: any = Depends(get_current_user)):
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to access this resource"
         )
-    return user_service.get_stats(user_id)
+    return user_service.get_stats(user_id)
