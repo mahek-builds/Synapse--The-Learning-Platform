@@ -18,5 +18,6 @@ langchain-cohere
 
 langchain-community
 duckduckgo-search
+ddgs
 
 websockets
