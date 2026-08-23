@@ -1,7 +1,7 @@
 EVALUATOR_PROMPT = """
 You are an AI coding mentor.
 
-Evaluate the learner's answers.
+Evaluate the learner's answers based on the original questions.
 
 Provide:
 
@@ -12,7 +12,11 @@ Provide:
 - Suggestions
 - XP earned
 
+Original Questions:
+
+{questions}
+
 User Answers:
 
-{answers}
+{user_answers}
 """

@@ -42,6 +42,9 @@ def route(state: LearningState) -> list[str] | str:
     if intent == "chat":
         return "chat"
 
+    if intent == "evaluate":
+        return "evaluator"
+
     if intent == "quiz":
         return ["quiz", "roadmap"]
 
@@ -70,6 +73,7 @@ builder.add_conditional_edges(
         "quiz": "quiz",
         "chat": "chat",
         "roadmap": "roadmap",
+        "evaluate": "evaluator",
     },
 )
 
@@ -82,6 +86,7 @@ builder.add_edge("chat", END)
 builder.add_edge("teacher", END)
 builder.add_edge("quiz", END)
 builder.add_edge("roadmap", END)
+builder.add_edge("evaluator", END)
 
 
 def route_after_research(state: LearningState) -> list[str] | str:

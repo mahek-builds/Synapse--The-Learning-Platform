@@ -16,8 +16,10 @@ from app.services.cohere_service import llm, llm_fast
 
 async def planner_node(state: LearningState):
 
+    context_str = state.get("questions", "")
     prompt = PLANNER_PROMPT.format(
-        message=state["user_message"]
+        message=state["user_message"],
+        context=f"Pending Quiz:\n{context_str}" if context_str else "No pending quiz."
     )
 
     response = await llm_fast.ainvoke(prompt)
@@ -97,7 +99,8 @@ async def quiz_node(state: LearningState):
 async def evaluator_node(state: LearningState):
 
     prompt = EVALUATOR_PROMPT.format(
-        answers=state["questions"]
+        questions=state.get("questions", ""),
+        user_answers=state.get("user_message", "")
     )
 
     response = await llm.ainvoke(prompt)

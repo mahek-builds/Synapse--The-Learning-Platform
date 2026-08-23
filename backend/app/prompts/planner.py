@@ -14,6 +14,7 @@ Possible intents:
 - research (for finding tutorials, resource links, books, documentation, or online classes)
 - quiz (for explicit tests, quizzes, or self-assessment)
 - roadmap (for a learning path, curriculum, or step-by-step roadmap)
+- evaluate (for grading a quiz, checking user's answers, or evaluating their submitted work. If there is a pending quiz in the context, strongly assume the user is answering it!)
 - chat (for casual talk, greetings, simple words like "hi", or off-topic conversation)
 
 Return ONLY JSON.
@@ -27,6 +28,9 @@ Example:
     "suggested_difficulty": 0,
     "needs_research": false
 }}
+
+Context (Previous active quiz, if any):
+{context}
 
 User Message:
 {message}
