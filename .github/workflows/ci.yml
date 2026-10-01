@@ -38,14 +38,19 @@ jobs:
       - name: Install backend dependencies
         run: pip install -r backend/requirements.txt
 
+      - name: Install test dependencies
+        run: pip install httpx
+
       - name: Run backend tests
         working-directory: backend
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          SUPABASE_JWT_SECRET: ${{ secrets.SUPABASE_JWT_SECRET }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           COHERE_API_KEY: ${{ secrets.COHERE_API_KEY }}
-        run: pytest 
+        run: pytest tests/ -v
+
 
   # ── Frontend (Vite + React + TypeScript) ───────────────────────────────────
   frontend:

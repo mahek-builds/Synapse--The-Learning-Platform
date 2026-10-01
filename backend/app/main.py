@@ -39,3 +39,6 @@ def root():
     return {
         "message": "Synapse AI Backend is Running"
     }
+@app.get("/health")
+def health():
+    return {"status":"ok"}

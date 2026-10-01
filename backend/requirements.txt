@@ -22,3 +22,4 @@ ddgs
 
 websockets
 pytest
+httpx
